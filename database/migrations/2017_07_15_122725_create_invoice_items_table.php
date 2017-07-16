@@ -19,6 +19,7 @@ class CreateInvoiceItemsTable extends Migration
             $table->integer('product_id');
             $table->integer('item_total_price');
             $table->integer('item_total_qty');
+			$table->boolean('payed')->default(false);
             $table->timestamps();
 		});
 	}

@@ -12,4 +12,8 @@ class Invoice extends Model implements Transformable
     protected $table="invoices";
     protected $fillable = ['user_id','total_price','total_qty'];
 
+    public function items(){
+      return $this->hasMany(InvoiceItem::class);
+
+    }
 }

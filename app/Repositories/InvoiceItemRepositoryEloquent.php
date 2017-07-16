@@ -7,7 +7,7 @@ use Prettus\Repository\Criteria\RequestCriteria;
 use App\Repositories\invoiceItemRepository;
 use App\Entities\InvoiceItem;
 use App\Validators\InvoiceItemValidator;
-
+use App\Entities\Product;
 /**
  * Class InvoiceItemRepositoryEloquent
  * @package namespace App\Repositories;
@@ -23,6 +23,10 @@ class InvoiceItemRepositoryEloquent extends BaseRepository implements InvoiceIte
     {
         return InvoiceItem::class;
     }
+    public function presenter()
+    {
+        return "App\\Presenters\\InvoicePresenter";
+    }
 
     
 
@@ -32,5 +36,30 @@ class InvoiceItemRepositoryEloquent extends BaseRepository implements InvoiceIte
     public function boot()
     {
         $this->pushCriteria(app(RequestCriteria::class));
+    }
+    public function createItem($invoice,$items){
+        $Invoiceitems=[];
+        foreach($items as $item){
+            $item['product_id']=$item['id'];
+            $item['item_total_price']=$item['itemTotal'];
+            $item['item_total_qty']=$item['qty'];
+            $this->updateProductQty($item);
+            $Invoiceitems[]=$item;
+        }
+        $invoice->items()->createMany($Invoiceitems);
+        foreach($invoice->items as $item){
+            $item->itemStatus()->attach(1,['complete'=>false]);
+        }
+        return $invoice->items;
+    
+    }
+    public function updateProductQty($item){
+        
+        $product=Product::find($item['id']);
+        $restQty=$product->qty-$item['qty'];
+        $product->update(['qty'=>$restQty]);
+    }
+    public function updateItemState($item){
+        
     }
 }

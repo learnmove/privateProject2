@@ -18,6 +18,7 @@ class CreateInvoicesTable extends Migration
 			$table->integer('user_id');
 			$table->integer('total_price');
 			$table->integer('total_qty');
+			$table->boolean('payed')->default(false);
             $table->timestamps();
 		});
 	}

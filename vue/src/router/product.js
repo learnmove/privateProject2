@@ -2,7 +2,7 @@
 import Product_Form from '@/components/product/form'
 import Product_Index from '@/components/product/index'
 import Cart from '@/components/product/cart'
-
+import Order from '@/components/product/order'
  const product=[
 {
     name:'product',
@@ -27,6 +27,12 @@ import Cart from '@/components/product/cart'
      name:'cart',
      component:Cart,
      path:'/product/cart',
+     meta:{forAuth:true}
+ },
+ {
+     name:'order',
+     component:Order,
+     path:'/product/order',
      meta:{forAuth:true}
  }
 

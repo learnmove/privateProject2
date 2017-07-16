@@ -13,7 +13,7 @@
       <ul class="nav navbar-nav">
         <li class="active"><router-link :to="{name:'product'}"><a href="#">商品</a></router-link></li>
         <li><router-link v-if="isAuth" :to="{name:'product_create'}"><a href="#">刊登商品</a></router-link></li>
-        <li><router-link v-if="isAuth" :to="{name:'product_create'}"><a href="#">會員資料</a></router-link></li> 
+        <li><router-link v-if="isAuth" :to="{name:'order'}"><a href="#">購買清單</a></router-link></li> 
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><router-link v-if="isAuth" :to="{name:'cart'}"><a href="#"><span class="badge">{{getTotalQty}} </span>購物車</a></router-link></li> 

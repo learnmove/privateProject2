@@ -15,13 +15,14 @@
         <p>{{product.description}}</p>
         <span class="text-waring">${{product.price}} </span>
         <div class="">數量{{product.qty}} </div>
+        <div class="">賣家：{{product.user.name}} </div>
         <div class="">
             <select name="" id="" v-model.number="product.purchaseQty"  >
                 <option :value=n v-for="n in product.qty">{{n}}</option>
             </select>
              </div>
         
-        <a href="#" @click.prevent="purchase(product)" class="btn btn-default" role="button">購買</a></p>
+        <a href="#" @click.prevent="purchase(product)" class="btn btn-default" role="button">放進購物車</a></p>
       </div>
     </div>
   </div>
@@ -66,6 +67,7 @@ import pagination from '../pagination'
             if(this.$auth.isAuthenticate()){
                 if(product.purchaseQty){
                     this.$store.dispatch('cart/addItem',product)
+                    this.$swal('放進去了')
                 }else{
                     this.$swal('你沒選數量')
                 }

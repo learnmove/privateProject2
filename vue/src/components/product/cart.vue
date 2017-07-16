@@ -8,6 +8,7 @@
             <th>價格</th>
             <th>數量</th>
             <th>總共</th>
+            <th>操作</th>
             </tr>
             
         </thead>
@@ -15,8 +16,13 @@
             <tr v-for="item in items">
                 <td>{{item.name}} </td>
                 <td>${{item.price}} </td>
-                <td>{{item.qty}} </td>
+                <td>
+                    <button class="btn btn-waring" @click="inc(item)">+</button>
+                    {{item.qty}} 
+                    <button class="btn btn-danger" @click="dec(item)">-</button>
+                    </td>
                 <td>${{item.itemTotal}} </td>
+                <td><button class="btn btn-danger" @click="removeItem(item)">刪除</button> </td>
             </tr>
             <tr>
                 <td colspan="">總價</td>
@@ -43,8 +49,20 @@ import {mapState,mapGetters} from 'vuex'
         methods:{
             checkout(){
                 this.axios.post(this.source,this.form)
-                .then(({data})=>console.log(data))
-                .then((error)=>console.log(error.response.data))
+                .then(({data})=>{
+                    this.$swal(data)
+                    this.$store.dispatch('cart/clearnItems')
+                })
+                .then((error)=>console.log(error.response))
+            },
+            removeItem(item){
+                this.$store.dispatch('cart/removeItem',item)
+            },
+            inc(item){
+                this.$store.dispatch('cart/incrementQty',item)
+            },
+            dec(item){
+                this.$store.dispatch('cart/decrementQty',item)
             }
         },
         computed:{
