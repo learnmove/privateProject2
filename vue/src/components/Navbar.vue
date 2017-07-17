@@ -14,14 +14,19 @@
         <li class="active"><router-link :to="{name:'product'}"><a href="#">商品</a></router-link></li>
         <li><router-link v-if="isAuth" :to="{name:'product_create'}"><a href="#">刊登商品</a></router-link></li>
         <li><router-link v-if="isAuth" :to="{name:'order'}"><a href="#">購買清單</a></router-link></li> 
+        <li><router-link v-if="isAuth" :to="{name:'sellout'}"><a href="#">售出清單</a></router-link></li> 
+        
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><router-link v-if="isAuth" :to="{name:'cart'}"><a href="#"><span class="badge">{{getTotalQty}} </span>購物車</a></router-link></li> 
+        <li><router-link  v-if="isAuth" :to="{name:'mysell'}"><a href="#"><span class="glyphicon glyphicon-log-in"></span> 我的商店</a></router-link></li>
+        <li  v-if="isAuth" style="color:white;"><a >{{$auth.getUser().email}}</a> </li>
           
         <li><a href="#" v-if="isAuth" @click.prevent="logout">登出</a> </li>
         <li><router-link v-if="!isAuth" :to="{name:'signup'}"><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></router-link> </li>
-      
         <li><router-link  v-if="!isAuth" :to="{name:'login'}"><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></router-link></li>
+        
+        
       </ul>
     </div>
   </div>

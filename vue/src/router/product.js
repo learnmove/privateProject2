@@ -3,6 +3,10 @@ import Product_Form from '@/components/product/form'
 import Product_Index from '@/components/product/index'
 import Cart from '@/components/product/cart'
 import Order from '@/components/product/order'
+import Seller from '@/components/product/mysell'
+import MySellOut from '@/components/product/sellout'
+
+
  const product=[
 {
     name:'product',
@@ -33,6 +37,17 @@ import Order from '@/components/product/order'
      name:'order',
      component:Order,
      path:'/product/order',
+     meta:{forAuth:true}
+ },
+  {
+     name:'mysell',
+     component:Seller,
+     path:'/product/mysell',
+     meta:{forAuth:true}
+ },  {
+     name:'sellout',
+     component:MySellOut,
+     path:'/product/sellout',
      meta:{forAuth:true}
  }
 

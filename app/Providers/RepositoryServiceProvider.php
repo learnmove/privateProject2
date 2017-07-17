@@ -26,6 +26,10 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(\App\Repositories\ProductRepository::class, \App\Repositories\ProductRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\InvoiceRepository::class, \App\Repositories\InvoiceRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\InvoiceItemRepository::class, \App\Repositories\InvoiceItemRepositoryEloquent::class);
+        $this->app->bind(\App\Repositories\RankRepository::class, \App\Repositories\RankRepositoryEloquent::class);
+        $this->app->bind(\App\Repositories\EvaluationRepository::class, \App\Repositories\EvaluationRepositoryEloquent::class);
+        $this->app->bind(\App\Repositories\RatingRepository::class, \App\Repositories\RatingRepositoryEloquent::class);
+        $this->app->bind(\App\Repositories\RatingCommentRepository::class, \App\Repositories\RatingCommentRepositoryEloquent::class);
         //:end-bindings:
     }
 }

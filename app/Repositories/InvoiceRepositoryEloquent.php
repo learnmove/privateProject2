@@ -24,7 +24,10 @@ class InvoiceRepositoryEloquent extends BaseRepository implements InvoiceReposit
         return Invoice::class;
     }
 
-    
+    public function presenter()
+    {
+        return "App\\Presenters\\InvoicePresenter";
+    }
 
     /**
      * Boot up the repository, pushing criteria
@@ -38,7 +41,12 @@ class InvoiceRepositoryEloquent extends BaseRepository implements InvoiceReposit
         return $invoice_result;
     }
     public function findInvoiceOfItems($userid){
-        $user_invoice=$this->model->with('items','items.itemStatus')->where('user_id',$userid)->orderBy('created_at','desc')->get();
+        $user_invoice=$this->model
+        ->with(['items',
+        'items.itemStatus','items.product','items.product.user'])
+        ->where('user_id',$userid)
+        ->orderBy('created_at','desc')
+        ->get();
 
         return $user_invoice;
     }

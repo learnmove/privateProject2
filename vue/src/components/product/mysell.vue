@@ -3,6 +3,11 @@
       <div class="row">
        <pagination @fetchProducts="fetchProducts"  :last_page="products.last_page"></pagination>
       </div>
+      <ul class="nav nav-pills">
+  <li role="presentation" class="active"><a href="#" @click.prevent="fetchProducts">所有商品</a></li>
+  <li role="presentation"><a href="#" @click.prevent="filter_sell">售完商品</a></li>
+  <li role="presentation"><a href="#"> </a></li>
+</ul>
   <div class="col-sm-6 col-md-4" v-for="product in products.data">
     <div class="thumbnail">
       <div v-if="product.user_id==$auth.getUser().id" class="text-right text-danger">
@@ -14,25 +19,15 @@
         <h3>{{product.name}}</h3>
         <p>{{product.description}}</p>
         <span class="text-waring">${{product.price}} </span>
-        <div class="">數量{{product.qty}} </div>
-        <div class="">賣家：{{product.user.name}} </div>
-
-
- <div v-if="product.user_id!=$auth.getUser().id" class="">
-         <select name="" id="" v-model.number="product.purchaseQty"  >
-                <option :value=n v-for="n in product.qty">{{n}}</option>
-            </select>
-            <div class="">
-        <a href="#" @click.prevent="purchase(product)" class="btn btn-default" role="button">放進購物車</a></p>
-
-            </div>
-          </div>
-            
+        <div class="" v-if="product.qty>0">數量{{product.qty}} </div>
+       <div class="" v-else>
+        <span class="text-danger">售完</span>
+       </div>
+        
       </div>
     </div>
   </div>
   <div class="row">
-      
   </div>
 </div>
 </template>
@@ -50,10 +45,13 @@ import pagination from '../pagination'
         },
       
       methods:{
-      
+      filter_sell(){
+        this.products.data=this.filter_sellout
+      },
         //   ...mapActions('products',['fetchProducts'],this.page)
+     
         fetchProducts(page){
-            return this.$store.dispatch('products/fetchProducts',page)},
+            return this.$store.dispatch('products/fetchMyProducts',page)},
         deleteProduct(product){
             const that=this
             this.$swal({
@@ -85,7 +83,8 @@ import pagination from '../pagination'
       },
       computed:{
         //   ...mapGetters('products',['getProducts'])
-        ...mapState('products',['products'])
+        ...mapState('products',['products']),
+        ...mapGetters('products',['filter_sellout'])
       },
       components:{
           pagination

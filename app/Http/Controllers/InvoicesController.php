@@ -34,7 +34,9 @@ class InvoicesController extends Controller
         $this->validator  = $validator;
         $this->middleware('jwt.auth')->except('index');
         $this->invoiceItemRepository=$invoiceItemRepository;
-        $this->userID=JWTAuth::parseToken()->authenticate()->id;
+       if(JWTAuth::getToken()){
+     $this->userID=JWTAuth::parseToken()->authenticate()->id;
+     }
     }
 
 
@@ -46,6 +48,8 @@ class InvoicesController extends Controller
     public function index()
     {
         $userItem=$this->invoiceRepository->findInvoiceOfItems($this->userID);
+        // $userItem=$this->invoiceRepository->findByField('user_id',35);
+        
         return response()->json($userItem);
     }
 

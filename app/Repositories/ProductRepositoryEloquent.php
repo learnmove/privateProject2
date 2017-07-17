@@ -36,6 +36,10 @@ class ProductRepositoryEloquent extends BaseRepository implements ProductReposit
         $model=$this->model->with('user')->orderBy('created_at','desc')->where('qty','>','0')->paginate($per_page);
         return $model;
     }
+    public function withMeAndPage($per_page,$userID){
+        $model=$this->model->with('user')->where('user_id',$userID)->orderBy('created_at','desc')->paginate($per_page);
+        return $model;
+    }
     public function createProduct($product){
         $product['user_id']=JWTAuth::parseToken()->authenticate()->id;
        $product= $this->model->create($product);

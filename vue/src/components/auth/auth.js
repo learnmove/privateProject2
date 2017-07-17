@@ -25,6 +25,13 @@
           }
         return false
       },
+        getUserId(){
+          if(localStorage.getItem('user')){
+         return JSON.parse(localStorage.getItem('user')).id
+            
+          }
+        return false
+      },
       isAuthenticate(){
           if(this.getToken()){
               return true

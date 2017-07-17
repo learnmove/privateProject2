@@ -16,8 +16,8 @@ class CreateItemDetailsTable extends Migration
         Schema::create('item_details', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('item_id');
-            $table->boolean('complete');
             $table->boolean('item_statuses_id')->default(false);
+            $table->integer('requester_id')->nullable();
             $table->timestamps();
         });
     }

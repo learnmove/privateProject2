@@ -17,15 +17,20 @@ class ProductController extends Controller
      */
      protected $productRepository;
      protected $productService;
+     protected $userID;
      public function __construct(ProductService $productService,ProductRepository $productRepository){
      $this->productRepository=$productRepository;
      $this->productService=$productService;
      $this->middleware('jwt.auth')->except('index','show');
+     if(JWTAuth::getToken()){
+     $this->userID=JWTAuth::parseToken()->authenticate()->id;
+     }
      }
     public function index()
     {
         return $this->productRepository->withUserAndPage(10);
         //
+
     }
 
     /**
@@ -106,5 +111,8 @@ class ProductController extends Controller
     {
         $deleteStatus=$this->productRepository->destroypProduct($id);
         return response()->json([$deleteStatus]);
+    }
+    public function getMyStore(){
+        return response()->json($this->productRepository->withMeAndPage(10,$this->userID));
     }
 }

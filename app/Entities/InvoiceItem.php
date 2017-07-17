@@ -10,12 +10,20 @@ class InvoiceItem extends Model implements Transformable
 {
     use TransformableTrait;
     protected $table="invoice_items";
-    protected $fillable = ['invoice_id','product_id','item_total_price','item_total_qty'];
+    protected $fillable = ['user_name','product_name','invoice_id','product_id','item_total_price','item_total_qty','seller_id'];
     public function invoice(){
         return $this->belongsTo(Invoice::class);
     }
     public function itemStatus(){
-        return $this->belongsToMany(ItemStatus::class,'item_details','item_id','item_statuses_id')->withPivot('complete');
+        return $this->belongsToMany(ItemStatus::class,'item_details','item_id','item_statuses_id')->withTimestamps()->orderBy('item_details.created_at','desc')->withPivot('requester_id');
     }
-
+    public function product(){
+        return $this->belongsTo(Product::class);
+    }
+    public function rating(){
+        return $this->hasOne(Raing::class);
+    }
+    public function rating_comment(){
+        return $this->hasMany(RatingComment::class);
+    }
 }

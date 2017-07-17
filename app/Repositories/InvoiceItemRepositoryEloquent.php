@@ -23,10 +23,7 @@ class InvoiceItemRepositoryEloquent extends BaseRepository implements InvoiceIte
     {
         return InvoiceItem::class;
     }
-    public function presenter()
-    {
-        return "App\\Presenters\\InvoicePresenter";
-    }
+    
 
     
 
@@ -43,23 +40,24 @@ class InvoiceItemRepositoryEloquent extends BaseRepository implements InvoiceIte
             $item['product_id']=$item['id'];
             $item['item_total_price']=$item['itemTotal'];
             $item['item_total_qty']=$item['qty'];
-            $this->updateProductQty($item);
+            $product=$this->updateProductQty($item);
+            $item['seller_id']=$product->user->id;
             $Invoiceitems[]=$item;
         }
         $invoice->items()->createMany($Invoiceitems);
         foreach($invoice->items as $item){
-            $item->itemStatus()->attach(1,['complete'=>false]);
+            $item->itemStatus()->attach(1);
         }
         return $invoice->items;
     
     }
     public function updateProductQty($item){
         
-        $product=Product::find($item['id']);
+        $product=Product::with('user')->find($item['id']);
         $restQty=$product->qty-$item['qty'];
         $product->update(['qty'=>$restQty]);
+        return $product;
     }
-    public function updateItemState($item){
-        
-    }
+    
+    
 }

@@ -11,7 +11,8 @@ use App\Http\Requests\InvoiceItemCreateRequest;
 use App\Http\Requests\InvoiceItemUpdateRequest;
 use App\Repositories\InvoiceItemRepository;
 use App\Validators\InvoiceItemValidator;
-
+use App\Services\InvoiceItemService;
+use JWTAuth;
 
 class InvoiceItemsController extends Controller
 {
@@ -19,17 +20,22 @@ class InvoiceItemsController extends Controller
     /**
      * @var InvoiceItemRepository
      */
-    protected $repository;
+    protected $invoiceItemRepository;
 
     /**
      * @var InvoiceItemValidator
      */
     protected $validator;
-
-    public function __construct(InvoiceItemRepository $repository, InvoiceItemValidator $validator)
+// sevcie
+    protected $invoiceItemService;
+    public function __construct(invoiceItemRepository $invoiceItemRepository, InvoiceItemValidator $validator,InvoiceItemService $invoiceItemService)
     {
-        $this->repository = $repository;
+        $this->invoiceItemRepository = $invoiceItemRepository;
         $this->validator  = $validator;
+        $this->invoiceItemService=$invoiceItemService;
+          if(JWTAuth::getToken()){
+     $this->userID=JWTAuth::parseToken()->authenticate()->id;
+     }
     }
 
 
@@ -40,17 +46,8 @@ class InvoiceItemsController extends Controller
      */
     public function index()
     {
-        $this->repository->pushCriteria(app('Prettus\Repository\Criteria\RequestCriteria'));
-        $invoiceItems = $this->repository->all();
-
-        if (request()->wantsJson()) {
-
-            return response()->json([
-                'data' => $invoiceItems,
-            ]);
-        }
-
-        return view('invoiceItems.index', compact('invoiceItems'));
+        $selloutItem=$this->invoiceItemRepository->with(['product','invoice.user','itemStatus'])->findByField('seller_id',$this->userID);
+        return response()->json($selloutItem);
     }
 
     /**
@@ -139,38 +136,10 @@ class InvoiceItemsController extends Controller
      *
      * @return Response
      */
-    public function update(InvoiceItemUpdateRequest $request, $id)
-    {
-
-        try {
-
-            $this->validator->with($request->all())->passesOrFail(ValidatorInterface::RULE_UPDATE);
-
-            $invoiceItem = $this->repository->update($request->all(), $id);
-
-            $response = [
-                'message' => 'InvoiceItem updated.',
-                'data'    => $invoiceItem->toArray(),
-            ];
-
-            if ($request->wantsJson()) {
-
-                return response()->json($response);
-            }
-
-            return redirect()->back()->with('message', $response['message']);
-        } catch (ValidatorException $e) {
-
-            if ($request->wantsJson()) {
-
-                return response()->json([
-                    'error'   => true,
-                    'message' => $e->getMessageBag()
-                ]);
-            }
-
-            return redirect()->back()->withErrors($e->getMessageBag())->withInput();
-        }
+    public function update(Request $request, $id)
+    {   
+        $status=$this->invoiceItemService->changeItemStatus($request->status,$id,$this->userID);
+        return response()->json($status);
     }
 
 

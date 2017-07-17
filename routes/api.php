@@ -16,4 +16,7 @@ use Illuminate\Http\Request;
 Route::post('/register', 'Auth\RegisterController@create');
 Route::post('/login', 'Auth\LoginController@login');
 Route::resource('/product','ProductController');
+Route::resource('/items','InvoiceItemsController');
+Route::get('/mystore','ProductController@getMyStore');
+
 Route::resource('/invoice','InvoicesController');
