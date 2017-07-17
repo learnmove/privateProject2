@@ -58,22 +58,30 @@
             </tr>
        </thead>
            <tr>
-                <td v-if="item.item_status[0].id==9||item.item_status[0].id==12||item.item_status[0].id==11 "><button class="btn btn-primary btn-xs" >評價</button> </td>
                 <td v-if="item.item_status[0].id==1"><button class="btn btn-primary btn-xs" @click="statusConfirm(item,2)">付款確認</button> </td>
                 <td v-if="item.item_status[0].id==7"><button class="btn btn-primary btn-xs" @click="statusConfirm(item,15)">收貨確認</button> </td>
                 <td v-if="item.item_status[0].id==8&&item.item_status[0].pivot.requester_id!==$auth.getUserId()"><button class="btn btn-primary btn-xs" @click="statusConfirm(item,9)">同意取消交易</button> </td>
                 <td>{{item.item_status[0].content}} </td>
-                <td ><button class="btn btn-primary btn-xs" v-if="item.item_status[0].id==12" @click="statusConfirm(item,10)">要求退貨</button> </td>
-                <td ><button class="btn btn-primary btn-xs" v-if="item.item_status[0].id==1||item.item_status[0].id==2||item.item_status[0].id==2" @click="statusConfirm(item,8)">要求取消交易</button> </td>
+                <td v-if="item.item_status[0].id==12" ><button class="btn btn-primary btn-xs"  @click="statusConfirm(item,10)">要求退貨</button> </td>
+                <td v-if="item.item_status[0].id==1||item.item_status[0].id==2||item.item_status[0].id==2"><button class="btn btn-primary btn-xs"  @click="statusConfirm(item,8)">要求取消交易</button> </td>
 
               
             </tr>
+                
   </table>
-  <table>
-
+  <table v-if="!item.rating">
+             <tr>
+                 <td>
+                       <Rate  v-if="item.item_status[0].id==9||item.item_status[0].id==12||item.item_status[0].id==11"  :value="item.rating?item.rating.level:1"   @afterRate="onAftereRate" :item="item"  :length="5"></Rate>
+                 </td>
+             </tr>
+  </table>
+  <table v-if="!item.rating_comment">
+          <input  v-if="item.item_status[0].id==9||item.item_status[0].id==12||item.item_status[0].id==11" class="form-control" type="text" v-model="item.feedback">
+    <td v-if="item.item_status[0].id==9||item.item_status[0].id==12||item.item_status[0].id==11"><button class="btn btn-primary btn-xs" @click="itemfeedback(item)">評價</button> </td>
+                 </td>
   </table>
 
-  <hr>
     </div>
  <tr>
       <td colspan="">訂單總價</td>
@@ -86,17 +94,38 @@
   </div>
 </template>
 <script>
+import Rate from '@/components/plugin/Rate.vue'
+
    export default{
        data(){
            return{
+            
             orders:[]
            }
        },
+       components:{
+           Rate
+       }
+       ,
         beforeMount(){
        this.fetchData()
         
     },
     methods:{
+      itemfeedback(item){
+        this.axios.post('/itemfeedback',{item:item})
+        .then(({data})=>{
+            console.log(data)
+            this.$swal('評價成功')
+            this.fetchData()
+    })
+      },
+        onAftereRate(rate,item) {
+            this.axios.post(`/rating`,{item:item,level:rate})
+            .then(({data})=>{this.$swal('評分成功')
+            this.fetchData()
+        })
+        },
         statusConfirm(item,status){
 
             this.axios.put(`/items/${item.id}`,{status:status})
@@ -115,3 +144,8 @@
    }
 
 </script>
+<style>
+.pane-body{
+  border-bottom:solid silver 5px;
+}
+</style>

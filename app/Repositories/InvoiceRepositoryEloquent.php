@@ -43,7 +43,7 @@ class InvoiceRepositoryEloquent extends BaseRepository implements InvoiceReposit
     public function findInvoiceOfItems($userid){
         $user_invoice=$this->model
         ->with(['items',
-        'items.itemStatus','items.product','items.product.user'])
+        'items.itemStatus','items.product','items.product.user','items.rating','items.rating_comment'])
         ->where('user_id',$userid)
         ->orderBy('created_at','desc')
         ->get();

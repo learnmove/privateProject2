@@ -15,13 +15,14 @@
         <p>{{product.description}}</p>
         <span class="text-waring">${{product.price}} </span>
         <div class="">數量{{product.qty}} </div>
-        <div class="">賣家：{{product.user.name}} </div>
+        <div class="">賣家：{{product.user.account}} </div>
 
 
  <div v-if="product.user_id!=$auth.getUser().id" class="">
-         <select name="" id="" v-model.number="product.purchaseQty"  >
+         選擇數量<select v-model.number="product.purchaseQty" value="1" >
                 <option :value=n v-for="n in product.qty">{{n}}</option>
             </select>
+   
             <div class="">
         <a href="#" @click.prevent="purchase(product)" class="btn btn-default" role="button">放進購物車</a></p>
 

@@ -5057,6 +5057,14 @@ vue-loader@^12.1.0:
     vue-style-loader "^3.0.0"
     vue-template-es2015-compiler "^1.2.2"
 
+vue-rate-it@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/vue-rate-it/-/vue-rate-it-1.1.5.tgz#dd6768e4a9747b30aed79ad424a181c60130b989"
+
+vue-rate@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/vue-rate/-/vue-rate-1.1.5.tgz#b81c235b88e2761f9c9fd85afd39cc35e7d0b397"
+
 vue-router@^2.3.1:
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-2.7.0.tgz#16d424493aa51c3c8cce8b7c7210ea4c3a89aff1"

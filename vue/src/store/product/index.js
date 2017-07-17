@@ -63,16 +63,16 @@ const products={
      getProducts(state){return state.products},
     filter_sellout(state){
        let products=state.products.data
-//   let arr=new Array();
-//        for(let key in products){
-//            console.log(products[key])
-//            arr.push(products[key])
-//        }
-        // return  arr.filter(item=>item.qty===0)
+  let arr=new Array();
+       for(let key in products){
+           console.log(products[key])
+           arr.push(products[key])
+       }
+        return  arr.filter(item=>item.qty===0)
         // 奇怪的bug 明明products.data也是array
 
 
-         return  products.filter(item=>item.qty===0)
+        //  return  products.filter(item=>item.qty===0)
 
 
 
