@@ -12,7 +12,7 @@
 <script>
    import {mapState} from 'vuex'
     export default{
-        props:['last_page'],
+        props:['last_page','method_name'],
         data(){
             return{
                page:1,
@@ -24,7 +24,7 @@
         methods:{
              changePage(n){
             this.page=n
-            this.$emit('fetchProducts',n)
+            this.$emit('fetchProducts',{page:n,method_name:this.method_name})
              if(n>5){
                this.page_start=n-4
                if(n+5>this.last_page){

@@ -5,6 +5,8 @@ import Cart from '@/components/product/cart'
 import Order from '@/components/product/order'
 import Seller from '@/components/product/mysell'
 import MySellOut from '@/components/product/sellout'
+import UserStore from '@/components/product/userstore'
+import UserRating from '@/components/product/rating'
 
 
  const product=[
@@ -49,7 +51,19 @@ import MySellOut from '@/components/product/sellout'
      component:MySellOut,
      path:'/product/sellout',
      meta:{forAuth:true}
- }
+ },
+  {
+     name:'user_ratting',
+     component:UserRating,
+     path:'/product/rating/:user_account'
+
+ },
+ {
+     name:'userstore',
+     component:UserStore,
+     path:'/product/:user_account'
+ },
+
 
  
  

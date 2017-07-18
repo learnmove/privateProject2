@@ -8,6 +8,8 @@ use App\Repositories\ProductRepository;
 use App\Entities\Product;
 use App\Validators\ProductValidator;
 use JWTAuth;
+use App\Entities\InvoiceItem;
+use App\Entities\User;
 /**
  * Class ProductRepositoryEloquent
  * @package namespace App\Repositories;
@@ -39,6 +41,20 @@ class ProductRepositoryEloquent extends BaseRepository implements ProductReposit
     public function withMeAndPage($per_page,$userID){
         $model=$this->model->with('user')->where('user_id',$userID)->orderBy('created_at','desc')->paginate($per_page);
         return $model;
+    }
+    public function withInfoAndPageOfUser($per_page,$user_account){
+        $user=User::where('account',$user_account)->first();
+        $user_id=$user->id;
+        $countRateOfUser=$this->countRateOfUser($user_id);
+        $countProduct=$this->countProductOfUser($user_id);
+        $model=$this->model->with('user')->where('user_id',$user_id)->where('qty','<>',0)->orderBy('created_at','desc')->paginate($per_page);
+        return ['model'=>$model,'store_info'=> ['countProduct'=>$countProduct,'user'=>$user,'countRateOfUser'=>$countRateOfUser]];
+    }
+    public function countProductOfUser($user_id){
+        return $this->model->where('user_id',$user_id)->count();
+    }
+    public function countRateOfUser($user_id){
+        return InvoiceItem::has('rating')->where('seller_id',$user_id)->count();
     }
     public function createProduct($product){
         $product['user_id']=JWTAuth::parseToken()->authenticate()->id;

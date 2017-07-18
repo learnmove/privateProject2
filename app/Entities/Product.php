@@ -15,4 +15,7 @@ class Product extends Model implements Transformable
     public function user(){
         return  $this->belongsTo(\App\Entities\User::class);
     }
+    public function items(){
+        return  $this->hasOne(\App\Entities\InvoiceItem::class,'product_id','id');
+    }
 }

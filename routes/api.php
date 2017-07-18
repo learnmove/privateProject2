@@ -18,6 +18,7 @@ Route::post('/login', 'Auth\LoginController@login');
 Route::resource('/product','ProductController');
 Route::resource('/items','InvoiceItemsController');
 Route::get('/mystore','ProductController@getMyStore');
+Route::get('/userstore/{user_account}','ProductController@getSellerStore');
 Route::resource('/rating','RatingController');
 Route::post('/itemfeedback','RatingController@ItemfFeedBack');
 

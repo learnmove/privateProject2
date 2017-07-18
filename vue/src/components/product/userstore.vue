@@ -1,7 +1,29 @@
 <template>
   <div class="container">
+
+  <div class="row">
+      <div class="panel panel-panel-info">
+          <div class="panel-heading">   
+    <table>
+  
+        <tbody>
+            <tr>
+               <td> <i class="fa fa-shopping-bag" aria-hidden="true"></i>商品：<span>{{store_info.countProduct}}</span></td> 
+               <td><i class="fa fa-user-circle" aria-hidden="true"></i>加入時間：<span>{{store_info.user?store_info.user.created_at:''}}</span> </td>
+               <td><i class="fa fa-star-o" aria-hidden="true">評價</i> <router-link :to="{name:'user_ratting',params:{user_account:this.$route.params.user_account}}"><span>{{store_info.countRateOfUser}}個評價</span></router-link></td>
+
+
+            </tr>
+            
+        </tbody>
+    </table>
+
+          </div>
+      </div>
+  </div>
+
       <div class="row">
-       <pagination :method_name="method_name" @fetchProducts="fetchProducts"  :last_page="products.last_page"></pagination>
+       <pagination @fetchProducts="fetchProducts"  :last_page="products.last_page"></pagination>
       </div>
   <div class="col-sm-6 col-md-4" v-for="product in products.data">
     <div class="thumbnail">
@@ -15,7 +37,7 @@
         <p>{{product.description}}</p>
         <span class="text-waring">${{product.price}} </span>
         <div class="">數量{{product.qty}} </div>
-        <div class="">賣家：<router-link :to="{name:'userstore',params:{'user_account':product.user.account}}">{{product.user.account}}</router-link> </div>
+        <div class="">賣家：{{product.user.account}} </div>
 
 
  <div v-if="product.user_id!=$auth.getUser().id" class="">
@@ -46,16 +68,18 @@ import pagination from '../pagination'
         },
         data(){
             return{
-                method_name:'fetchProducts'
+          
             }
         },
       
       methods:{
       
         //   ...mapActions('products',['fetchProducts'],this.page)
-        fetchProducts(pagination){
-            console.log(pagination.page)
-            return this.$store.dispatch('products/fetchProducts',pagination.page)},
+        fetchProducts(page){
+            return this.$store.dispatch('products/fetchUserProducts',
+            {user_account:this.$route.params.user_account,
+                page:page}
+                )},
         deleteProduct(product){
             const that=this
             this.$swal({
@@ -87,10 +111,28 @@ import pagination from '../pagination'
       },
       computed:{
         //   ...mapGetters('products',['getProducts'])
-        ...mapState('products',['products'])
+        ...mapState('products',['products','store_info']),
+        ...mapGetters('products',['filterRatingStarOne'])
       },
       components:{
           pagination
       }
     }
 </script>
+<style scoped  >
+
+td {
+ padding: 10px;
+ 
+}
+td span{
+     color:#FF5722;
+
+ }
+ i{
+     color:#000000;
+     margin-right: 5px;
+ }
+ .panel{
+ }
+</style>

@@ -4,13 +4,16 @@ const types={
     delete_product:'delete_product',
     edit_product:'edit_product',
     fetchMyProducts:'fetchMyProducts',
-    filter_sellout:'filter_sellout'
+    fetchUserProducts:'fetchUserProducts',
+    filter_sellout:'filter_sellout',
+    set_store_info:'set_store_info'
 }
 const products={
     namespaced: true,
      state:{
           products:[],
-          edit_product:{}
+          edit_product:{},
+          store_info:{}
         },
      mutations: { 
          [types.set_products](state,data){
@@ -26,6 +29,12 @@ const products={
          },
          [types.fetchMyProducts](state,data){
             state.products=data
+         },
+         [types.fetchUserProducts](state,data){
+             state.products=data
+         },
+         [types.set_store_info](state,data){
+             state.store_info=data
          }
    },
      actions: { 
@@ -55,17 +64,24 @@ const products={
             .then(({data})=>{
                 commit(types.fetchMyProducts,data)
             })
-        }
-        
+        },
+        fetchUserProducts({commit},data){
+            Vue.axios.get(`/userstore/${data.user_account}?page=${data.page}`)
+          .then(({data})=>{
+              
+         commit(types.fetchUserProducts,data.model)
+         commit(types.set_store_info,data.store_info)
 
-   },
+             })
+        }
+     }
+   ,
    getters:{
      getProducts(state){return state.products},
     filter_sellout(state){
        let products=state.products.data
   let arr=new Array();
        for(let key in products){
-           console.log(products[key])
            arr.push(products[key])
        }
         return  arr.filter(item=>item.qty===0)
@@ -73,13 +89,7 @@ const products={
 
 
         //  return  products.filter(item=>item.qty===0)
-
-
-
     }
-     
-          
-     
    }
 }
-export default  products
+export default products

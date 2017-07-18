@@ -7,7 +7,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 use Illuminate\Database\Eloquent\Model;
-
 class User extends Model implements Transformable
 {
     use TransformableTrait;
@@ -34,5 +33,11 @@ class User extends Model implements Transformable
     public function products(){
         return $this->hasMany(\App\Entities\Product::class);
     }
-
+    public function getCreatedAtAttribute($date)
+    {
+        return \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $date)->diffForHumans();
+    }
+    public function user_post_rating(){
+        return $this->hasMany(Rating::class);
+    }
 }

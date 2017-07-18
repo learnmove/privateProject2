@@ -27,6 +27,7 @@ class RatingController extends Controller
     public function index()
     {
         //
+
     }
 
     /**
@@ -62,8 +63,10 @@ class RatingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($user_account,Request $rq)
     {
+       $rating= $this->ratingRepository->getUserRating($user_account,$rq->method_name);
+         return response()->json( $rating);
         //
     }
 

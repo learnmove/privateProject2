@@ -109,10 +109,15 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        $deleteStatus=$this->productRepository->destroypProduct($id);
+        // $deleteStatus=$this->productRepository->destroypProduct($id);
+        // 改成有visible欄位 軟刪
         return response()->json([$deleteStatus]);
     }
     public function getMyStore(){
         return response()->json($this->productRepository->withMeAndPage(10,$this->userID));
+    }
+    public function getSellerStore(Request $request,$user_account){
+        $data= $this->productRepository->withInfoAndPageOfUser(10,$user_account);
+         return response()->json( $data);
     }
 }

@@ -14,8 +14,8 @@ class Rating extends Model implements Transformable
     public function item(){
         return $this->belongsTo(InvoiceItem::class);
     }
-    public function user_rating(){
-        return $this->belongsTo(User::class);
+    public function user(){
+        return $this->belongsTo(User::class,'user_id');
     }
 
 }

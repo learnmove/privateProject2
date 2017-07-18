@@ -10,7 +10,7 @@ class ProductsTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Entities\Product::class,300)->create();
+        factory(App\Entities\Product::class,10000)->create();
 
         //
     }
