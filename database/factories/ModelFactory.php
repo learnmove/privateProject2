@@ -47,3 +47,9 @@ $factory->define(App\Entities\InvoiceItem::class,function(Faker\Generator $faker
      'item_total_qty'=>mt_rand(1,2)
   ]  ;
 });
+$factory->define(App\Entities\ProductQuestion::class,function(Faker\Generator $faker){
+    return [
+     'account'=>$faker->username,
+     'content'=>$faker->sentence
+  ]  ;
+});

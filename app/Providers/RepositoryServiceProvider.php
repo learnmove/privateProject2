@@ -30,6 +30,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(\App\Repositories\EvaluationRepository::class, \App\Repositories\EvaluationRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\RatingRepository::class, \App\Repositories\RatingRepositoryEloquent::class);
         $this->app->bind(\App\Repositories\RatingCommentRepository::class, \App\Repositories\RatingCommentRepositoryEloquent::class);
+        $this->app->bind(\App\Repositories\ProductQuestionRepository::class, \App\Repositories\ProductQuestionRepositoryEloquent::class);
         //:end-bindings:
     }
 }

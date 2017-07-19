@@ -21,6 +21,7 @@ Route::get('/mystore','ProductController@getMyStore');
 Route::get('/userstore/{user_account}','ProductController@getSellerStore');
 Route::resource('/rating','RatingController');
 Route::post('/itemfeedback','RatingController@ItemfFeedBack');
+Route::resource('/question','ProductQuestionsController');
 
 
 Route::resource('/invoice','InvoicesController');

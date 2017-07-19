@@ -24,5 +24,8 @@ class Product extends Model implements Transformable
     public function items(){
         return  $this->hasOne(\App\Entities\InvoiceItem::class,'product_id','id');
     }
+    public function questions(){
+        return $this->hasMany(\App\Entities\ProductQuestion::class,'product_id','id');
+    }
 
 }

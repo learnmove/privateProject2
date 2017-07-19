@@ -25,7 +25,8 @@
    
             <div class="">
         <a href="#" @click.prevent="purchase(product)" class="btn btn-default" role="button">放進購物車</a></p>
-
+        <button class="btn btn-primary" @click="showinput(product)">詢問/商品留言</button>
+        
             </div>
           </div>
             
@@ -35,29 +36,87 @@
   
   <div class="row">
        <pagination :method_name="method_name" @fetchProducts="fetchProducts"  :last_page="products.last_page"></pagination>
-      
+      <modal title="Modal Title" :show="OpenModal" @cancel="cancel">
+          <div class="form-group"><input type="text" name="" id="" class="form-control"></div>
+          <button class="btn btn-primary">送出訊息</button>
+
+ <div class="media" v-for="question in questions">
+  <a class="media-left media-middle" href="#">
+  </a>
+  <div class="media-body">
+    <h4 class="media-heading">{{question.account}}</h4>
+    <div class="ask">
+        <div>
+         {{question.content}}
+        </div>
+    </div>
+    <div class="date">
+        {{question.created_at}}
+    </div>
   </div>
-  
+</div>
+
+<pagination @fetchProducts="questionPage" :last_page="question_info.last_page"></pagination>
+
+
+</modal>
+  </div>
+
 </div>
 </template>
 <script>
 import {mapActions,mapGetters,mapState} from 'vuex'
 import pagination from'@/components/pagination.vue'
+import modal from'@/components/plugin/Modal.vue'
+
     export default{
+       
         beforeMount(){
             this.fetchProducts()
         },
+       
         data(){
             return{
-                method_name:'fetchProducts'
+                method_name:'fetchProducts',
+                OpenModal:false,
+                questions:[{}],
+                question_info:{},
+                question_page:'',
+                selectProduct:{},
             }
         },
       
       methods:{
-      
+          questionPage(pagination){
+            this.question_page=pagination.page
+            
+            this.fetchQuestion(this.selectProduct)
+            
+          },
+          cancel(){
+                this.OpenModal=false
+            
+          },
+          showinput(product){
+                this.question_page=1
+              
+            this.OpenModal=!this.OpenModal
+            if(this.OpenModal==true){
+            this.fetchQuestion(product)
+            }
+          },
+          fetchQuestion(product){
+              this.selectProduct=product
+            this.axios.get(`/question/${product.id}?page=${this.question_page}`)
+            .then(({data})=>{
+                this.questions=data.data
+                delete data.data
+                this.question_info=data
+            })
+          }
+          ,
         //   ...mapActions('products',['fetchProducts'],this.page)
         fetchProducts(pagination={page:1}){
-            console.log(pagination)
             return this.$store.dispatch('products/fetchProducts',pagination.page)},
         deleteProduct(product){
             const that=this
@@ -93,7 +152,8 @@ import pagination from'@/components/pagination.vue'
         ...mapState('products',['products'])
       },
       components:{
-          pagination
+          pagination,
+          modal
       }
     }
 </script>
