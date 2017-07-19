@@ -1,11 +1,11 @@
 <template>
   <div class="container">
       <div class="row">
-       <pagination @fetchProducts="fetchProducts"  :last_page="products.last_page"></pagination>
+       <pagination @fetchProducts="fetchProducts"  :last_page="products.last_page" :method_name=method_name></pagination>
       </div>
       <ul class="nav nav-pills">
-  <li role="presentation" class="active"><a href="#" @click.prevent="fetchProducts">所有商品</a></li>
-  <li role="presentation"><a href="#" @click.prevent="filter_sell">售完商品</a></li>
+  <li role="presentation" class="active"><a href="#" @click.prevent="filter_sell('fetchMyProducts')">所有商品</a></li>
+  <li role="presentation"><a href="#" @click.prevent="filter_sell('sellout')">售完商品</a></li>
   <li role="presentation"><a href="#"> </a></li>
 </ul>
   <div class="col-sm-6 col-md-4" v-for="product in products.data">
@@ -40,18 +40,27 @@ import pagination from '../pagination'
         },
         data(){
             return{
-          
+                method_name:'fetchMyProducts'
             }
         },
       
       methods:{
-      filter_sell(){
-        this.products.data=this.filter_sellout
+      filter_sell(method_name){
+        this.method_name=method_name
+        if(method_name=='sellout'){
+            this.fetchProducts({page:1,method_name:'sellout'})
+            
+    }else{
+        
+            this.fetchProducts({page:1,method_name:'fetchMyProducts'})
+        }
+        
       },
         //   ...mapActions('products',['fetchProducts'],this.page)
      
-        fetchProducts(page){
-            return this.$store.dispatch('products/fetchMyProducts',page)},
+        fetchProducts(pagination={page:1,method_name:'fetchMyProducts'}){
+            console.log(pagination)
+            return this.$store.dispatch('products/fetchMyProducts',pagination)},
         deleteProduct(product){
             const that=this
             this.$swal({
@@ -84,7 +93,6 @@ import pagination from '../pagination'
       computed:{
         //   ...mapGetters('products',['getProducts'])
         ...mapState('products',['products']),
-        ...mapGetters('products',['filter_sellout'])
       },
       components:{
           pagination

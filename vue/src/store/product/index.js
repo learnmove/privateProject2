@@ -59,14 +59,14 @@ const products={
             
 
         },
-        fetchMyProducts({commit},page){
-            Vue.axios.get(`/mystore?page=${page}`)
+        fetchMyProducts({commit},{page,method_name}){
+            Vue.axios.get(`/mystore?page=${page}&method_name=${method_name}`)
             .then(({data})=>{
                 commit(types.fetchMyProducts,data)
             })
         },
-        fetchUserProducts({commit},data){
-            Vue.axios.get(`/userstore/${data.user_account}?page=${data.page}`)
+        fetchUserProducts({commit},{user_account,pagination}){
+            Vue.axios.get(`/userstore/${user_account}?page=${pagination.page}`)
           .then(({data})=>{
               
          commit(types.fetchUserProducts,data.model)

@@ -32,7 +32,7 @@ class CreateItemStatusesTable extends Migration
             ,['event'=>'refunded','content'=>'已退貨']
             ,['event'=>'complete','content'=>'交易完成']
             ,['event'=>'get_confirm','content'=>'收貨確認']
-            ,['event'=>'refund_angreen','content'=>'同意退貨']]);
+            ,['event'=>'refund_angree','content'=>'同意退貨']]);
             
             
             

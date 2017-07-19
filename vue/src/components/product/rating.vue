@@ -34,9 +34,10 @@
 </ul>
 <Page @fetchProducts="fetchProducts" :last_page="pages.last_page" :method_name="method_name"></Page>
                 <ul>
+                    
             <li v-for="item in items">
                 <div class="user">買家：{{item.rating.user.account}} </div>
-      <Rate :value="parseInt(item.rating.level)"  :length="5"></Rate>
+      <DisPlayRate :value="parseInt(item.rating.level)"  :length="5"></DisPlayRate>
       <div class="comment">
           {{item.rating_comment?item.rating_comment.feedback:''}}
       </div>
@@ -59,10 +60,10 @@
 </template>
 <script>
 import {mapState,mapGetters} from 'vuex'
-import Rate from '@/components/plugin/Rate.vue'
+import DisPlayRate from '@/components/plugin/DisPlayRate.vue'
 import Page from '@/components/pagination.vue'
     export default{
-        components:{Rate,Page},
+        components:{DisPlayRate,Page},
         data(){
             return{
                method_name:'fetchData',
@@ -82,7 +83,6 @@ import Page from '@/components/pagination.vue'
             },
 
             fetchData(){
-                console.log('ii')
                this.$store.dispatch('ratings/get_item_rating',
                {user_account:this.$route.params.user_account,
                    page:this.page,
@@ -92,6 +92,7 @@ import Page from '@/components/pagination.vue'
             },
             filterStar(method_name){
                 this.method_name=method_name
+                this.page=1
                 this.fetchData()
             }
         }

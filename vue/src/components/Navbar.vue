@@ -45,7 +45,6 @@ import {mapGetters} from 'vuex'
         watch:{
             '$route':function(){
                 this.isAuth=this.$auth.isAuthenticate()
-                
             },
           
         },
@@ -62,9 +61,8 @@ import {mapGetters} from 'vuex'
             logout(){
                 this.$auth.destroyLogin()
                 this.$swal('已登出')
-                setTimeout(function() {
-                window.location.reload()
-                }, 1000);
+                 this.isAuth=false
+               
             }
         }
     }

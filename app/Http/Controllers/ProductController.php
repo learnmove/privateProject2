@@ -21,7 +21,7 @@ class ProductController extends Controller
      public function __construct(ProductService $productService,ProductRepository $productRepository){
      $this->productRepository=$productRepository;
      $this->productService=$productService;
-     $this->middleware('jwt.auth')->except('index','show');
+     $this->middleware('jwt.auth')->except('index','show','getSellerStore');
      if(JWTAuth::getToken()){
      $this->userID=JWTAuth::parseToken()->authenticate()->id;
      }
@@ -111,7 +111,8 @@ class ProductController extends Controller
     {
         // $deleteStatus=$this->productRepository->destroypProduct($id);
         // 改成有visible欄位 軟刪
-        return response()->json([$deleteStatus]);
+        $softDeleteStatus=$this->productRepository->softDeleteStatus($id);
+        return response()->json([$softDeleteStatus]);
     }
     public function getMyStore(){
         return response()->json($this->productRepository->withMeAndPage(10,$this->userID));

@@ -35,11 +35,21 @@ class ProductRepositoryEloquent extends BaseRepository implements ProductReposit
         $this->pushCriteria(app(RequestCriteria::class));
     }
     public function withUserAndPage($per_page){
-        $model=$this->model->with('user')->orderBy('created_at','desc')->where('qty','>','0')->paginate($per_page);
+        $model=$this->model->with('user')->orderBy('created_at','desc')->where('qty','>','0')->where('visible','<>','0')->paginate($per_page);
         return $model;
     }
     public function withMeAndPage($per_page,$userID){
-        $model=$this->model->with('user')->where('user_id',$userID)->orderBy('created_at','desc')->paginate($per_page);
+        $request=request();
+        $method_name=$request->method_name;
+            switch ($method_name){
+            case 'fetchMyProducts':
+            $model=$this->model->with('user')->where('user_id',$userID)->where('visible','<>','0')->orderBy('created_at','desc')->paginate($per_page);
+            break;
+            case 'sellout':
+            $model=$this->model->with('user')->where('user_id',$userID)->where('qty',0)->orderBy('created_at','desc')->paginate($per_page);
+            break;
+        }
+    
         return $model;
     }
     public function withInfoAndPageOfUser($per_page,$user_account){
@@ -47,7 +57,7 @@ class ProductRepositoryEloquent extends BaseRepository implements ProductReposit
         $user_id=$user->id;
         $countRateOfUser=$this->countRateOfUser($user_id);
         $countProduct=$this->countProductOfUser($user_id);
-        $model=$this->model->with('user')->where('user_id',$user_id)->where('qty','<>',0)->orderBy('created_at','desc')->paginate($per_page);
+        $model=$this->model->with('user')->where('user_id',$user_id)->where('qty','<>',0)->where('visible','<>','0')->orderBy('created_at','desc')->paginate($per_page);
         return ['model'=>$model,'store_info'=> ['countProduct'=>$countProduct,'user'=>$user,'countRateOfUser'=>$countRateOfUser]];
     }
     public function countProductOfUser($user_id){
@@ -61,10 +71,17 @@ class ProductRepositoryEloquent extends BaseRepository implements ProductReposit
        $product= $this->model->create($product);
         return $product;
     }
-    public function destroypProduct($id){
-        $this->model->destroy($id);
+    // public function destroypProduct($id){
+    //     $this->model->destroy($id);
+    //     return '刪除成功';
+    // }
+    public function softDeleteStatus($id){
+        $product=$this->model->find($id);
+        $product->visible=0;
+        $product->save();
         return '刪除成功';
     }
+    
     public function updateProduct($id,$product){
         $old_product=$this->model->find($id);
         $old_product->update($product);

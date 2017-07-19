@@ -1,10 +1,12 @@
 <template>
   <div>
          <ul class="pagination">
-             
+            <li><a href=""  @click.prevent="changePage(1)"> <<</a></li> 
          <li :class="{'active':start==page}" v-for="start in pages" class="page-item" >
         <a href="#" @click.prevent="changePage(start)"> {{start}}</a>
         </li>
+         <li><a href=""  @click.prevent="changePage(last_page)">>></a></li> 
+        
         
     </ul>
   </div>
@@ -25,7 +27,11 @@
              changePage(n){
             this.page=n
             this.$emit('fetchProducts',{page:n,method_name:this.method_name})
-             if(n>5){
+            if(this.last_page<10){
+                this.page_start=1,
+               this.page_end=this.last_page
+            }else{
+            if(n>5){
                this.page_start=n-4
                if(n+5>this.last_page){
                    this.page_end=this.last_page
@@ -33,9 +39,28 @@
                this.page_end=n+5
                }
             }else{
-               this.page_start=1,
+                 this.page_start=1,
                this.page_end=10
             }
+            }
+            
+        },
+        watch_method(){
+            if(this.last_page<10){
+              this.page_start=1,
+               this.page_end=this.last_page
+            }else{
+               this.page_end=10
+                
+            }
+        }
+    },
+    watch:{
+        'last_page':function(){
+            this.watch_method()
+        },
+        'method_name':function(){
+            this.changePage(1)
         },
     },
     computed:{

@@ -32,14 +32,17 @@
       </div>
     </div>
   </div>
+  
   <div class="row">
+       <pagination :method_name="method_name" @fetchProducts="fetchProducts"  :last_page="products.last_page"></pagination>
       
   </div>
+  
 </div>
 </template>
 <script>
 import {mapActions,mapGetters,mapState} from 'vuex'
-import pagination from '../pagination'
+import pagination from'@/components/pagination.vue'
     export default{
         beforeMount(){
             this.fetchProducts()
@@ -53,8 +56,8 @@ import pagination from '../pagination'
       methods:{
       
         //   ...mapActions('products',['fetchProducts'],this.page)
-        fetchProducts(pagination){
-            console.log(pagination.page)
+        fetchProducts(pagination={page:1}){
+            console.log(pagination)
             return this.$store.dispatch('products/fetchProducts',pagination.page)},
         deleteProduct(product){
             const that=this

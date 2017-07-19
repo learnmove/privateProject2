@@ -75,10 +75,10 @@ import pagination from '../pagination'
       methods:{
       
         //   ...mapActions('products',['fetchProducts'],this.page)
-        fetchProducts(page){
+        fetchProducts(pagination={page:1}){
             return this.$store.dispatch('products/fetchUserProducts',
             {user_account:this.$route.params.user_account,
-                page:page}
+                pagination:pagination}
                 )},
         deleteProduct(product){
             const that=this
@@ -112,7 +112,6 @@ import pagination from '../pagination'
       computed:{
         //   ...mapGetters('products',['getProducts'])
         ...mapState('products',['products','store_info']),
-        ...mapGetters('products',['filterRatingStarOne'])
       },
       components:{
           pagination

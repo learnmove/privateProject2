@@ -1,5 +1,12 @@
 <template>
 <div class="container">
+<pagination :method_name="method_name" @fetchProducts="fetchProducts"  :last_page="order_info.last_page"></pagination>
+     <ul class="nav nav-pills">
+  <li role="presentation" class="active"><a href="#" @click.prevent="filter_buy('fetchAllOrders')">所有訂單</a></li>
+  <li role="presentation"><a href="#" @click.prevent="filter_buy('buycomplete')">完成清單</a></li>
+  <li role="presentation"><a href="#" @click.prevent="filter_buy('buyrefund')">退貨清單</a></li>
+  <li role="presentation"><a href="#" @click.prevent="filter_buy('buycancell')">取消清單</a></li>
+</ul>
     <div class="panel panel-default" v-for="order in orders ">
         <div class="panel-heading">
             <span class="text-center">購買清單</span>
@@ -89,22 +96,27 @@
 
 </tr>
     </div>
-     
-  
+
   </div>
 </template>
 <script>
+import pagination from '@/components/pagination.vue'
 import Rate from '@/components/plugin/Rate.vue'
-
    export default{
+       components:{
+       },
        data(){
            return{
             
-            orders:[]
+            orders:[],
+            order_info:{},
+            method_name:'fetchAllOrders',
+            page:1
            }
        },
        components:{
-           Rate
+           Rate,
+           pagination
        }
        ,
         beforeMount(){
@@ -112,6 +124,13 @@ import Rate from '@/components/plugin/Rate.vue'
         
     },
     methods:{
+        filter_buy(method_name){
+            this.method_name=method_name;
+        },
+        fetchProducts({page}){
+            this.page=page
+            this.fetchData()
+        },
       itemfeedback(item){
         this.axios.post('/itemfeedback',{item:item})
         .then(({data})=>{
@@ -137,8 +156,12 @@ import Rate from '@/components/plugin/Rate.vue'
             .catch((error)=>console.log(error.response))
         },
         fetchData(){
-             this.axios.get(`invoice`)
-        .then(({data})=>{this.orders=data;console.log(data);})
+             this.axios.get(`invoice?page=${this.page}&method_name=${this.method_name}`)
+        .then(({data})=>{
+            this.orders=data.data;console.log(data);
+            delete data.data
+            this.order_info=data
+        })
         }
     }
    }
