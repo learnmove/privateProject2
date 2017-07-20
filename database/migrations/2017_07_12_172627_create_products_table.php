@@ -20,6 +20,7 @@ class CreateProductsTable extends Migration
 			$table->integer('price');
 			$table->text('description');
 			$table->integer('qty');
+			$table->integer('school_id');
 			$table->boolean('visible')->default(1);
 			$table->string('img')->nullable();
             $table->timestamps();

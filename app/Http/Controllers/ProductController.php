@@ -8,6 +8,7 @@ use Auth;
 use JWTAuth;
 use App\Services\ProductService;
 use App\Http\Requests\ProductRequest;
+use DB;
 class ProductController extends Controller
 {
     /**
@@ -21,7 +22,7 @@ class ProductController extends Controller
      public function __construct(ProductService $productService,ProductRepository $productRepository){
      $this->productRepository=$productRepository;
      $this->productService=$productService;
-     $this->middleware('jwt.auth')->except('index','show','getSellerStore');
+     $this->middleware('jwt.auth')->except('index','show','getSellerStore','getSchoolList');
      if(JWTAuth::getToken()){
      $this->userID=JWTAuth::parseToken()->authenticate()->id;
      }
@@ -121,4 +122,9 @@ class ProductController extends Controller
         $data= $this->productRepository->withInfoAndPageOfUser(10,$user_account);
          return response()->json( $data);
     }
+    public function getSchoolList(){
+       $schools= DB::table('school')->get();
+     return response()->json($schools );
+    }
+
 }

@@ -39,8 +39,8 @@ const products={
    },
      actions: { 
       
-        fetchProducts({commit},page){
-            Vue.axios.get(`/product?page=${page}`)
+        fetchProducts({commit},{page,method_name,selectSchoolID}){
+            Vue.axios.get(`/product?page=${page}&method_name=${method_name}&selectSchoolID=${selectSchoolID}`)
             .then(({data})=>{
                 commit(types.set_products,data)
             })

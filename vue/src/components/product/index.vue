@@ -1,9 +1,22 @@
 <template>
   <div class="container">
       <div class="row">
-       <pagination :method_name="method_name" @fetchProducts="fetchProducts"  :last_page="products.last_page"></pagination>
+       <pagination :method_name="method_name" @fetchProducts="fetchProducts"  :last_page="products.last_page" :selectSchoolID="selectSchoolID"></pagination>
       </div>
-  <div class="col-sm-6 col-md-4" v-for="product in products.data">
+      <div class="dropdown">
+<button class="btn btn-primary" @click="reFetchAll()">全部</button>
+  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    學校
+    <span class="caret"></span>
+  </button>
+<button class="btn btn-info" v-if="$auth.isAuthenticate()"  @click.prevent="selectSchool($auth.getUserSchoolId())">我的學校</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+    <li v-for="school in schools"><a href="#" @click.prevent="selectSchool(school.id)">{{school.name}}</a></li>
+
+  </ul>
+</div>
+
+  <div class="col-sm-4 col-md-4 col-xs-12" v-for="product in products.data">
     <div class="thumbnail">
       <div v-if="product.user_id==$auth.getUser().id" class="text-right text-danger">
           <button @click="deleteProduct(product)" class="btn btn-danger">x</button>
@@ -35,7 +48,9 @@
   </div>
   
   <div class="row">
-       <pagination :method_name="method_name" @fetchProducts="fetchProducts"  :last_page="products.last_page"></pagination>
+       <!--<pagination :method_name="method_name" @fetchProducts="fetchProducts"  :last_page="products.last_page"></pagination>-->
+       <pagination :method_name="method_name" @fetchProducts="fetchProducts"  :last_page="products.last_page" :selectSchoolID="selectSchoolID"></pagination>
+       
       <modal title="Modal Title" :show="OpenModal" @cancel="cancel">
           <div class="form-group"><input type="text" name="" id="" class="form-control"></div>
           <button class="btn btn-primary">送出訊息</button>
@@ -56,7 +71,7 @@
   </div>
 </div>
 
-<pagination @fetchProducts="questionPage" :last_page="question_info.last_page"></pagination>
+<pagination @fetchProducts="questionPage" :passpage="question_page" :last_page="question_info.last_page"></pagination>
 
 
 </modal>
@@ -73,6 +88,7 @@ import modal from'@/components/plugin/Modal.vue'
        
         beforeMount(){
             this.fetchProducts()
+            this.fetchSchoolList()
         },
        
         data(){
@@ -83,10 +99,25 @@ import modal from'@/components/plugin/Modal.vue'
                 question_info:{},
                 question_page:'',
                 selectProduct:{},
+                schools:[],
+                selectSchoolID:''
             }
         },
       
       methods:{
+          reFetchAll(){
+            this.method_name='fetchProducts'
+            this.fetchProducts({page:1,method_name:'fetchProducts',selectSchoolID:''})
+          },
+          selectSchool(id){
+            this.selectSchoolID=id
+            this.method_name="selectSchoolID"
+            this.fetchProducts({page:1,method_name:this.method_name,selectSchoolID:this.selectSchoolID})
+          },
+          fetchSchoolList(){
+              this.axios.get('/schoolist')
+              .then(({data})=>{this.schools=data})
+          },
           questionPage(pagination){
             this.question_page=pagination.page
             
@@ -116,8 +147,8 @@ import modal from'@/components/plugin/Modal.vue'
           }
           ,
         //   ...mapActions('products',['fetchProducts'],this.page)
-        fetchProducts(pagination={page:1}){
-            return this.$store.dispatch('products/fetchProducts',pagination.page)},
+        fetchProducts(pagination={page:1,method_name:'fetchProducts',selectSchoolID:''}){
+            return this.$store.dispatch('products/fetchProducts',pagination)},
         deleteProduct(product){
             const that=this
             this.$swal({

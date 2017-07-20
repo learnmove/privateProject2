@@ -35,7 +35,22 @@ class ProductRepositoryEloquent extends BaseRepository implements ProductReposit
         $this->pushCriteria(app(RequestCriteria::class));
     }
     public function withUserAndPage($per_page){
-        $model=$this->model->with('user')->orderBy('created_at','desc')->where('qty','>','0')->where('visible','<>','0')->paginate($per_page);
+        $request=request();
+        switch($request->method_name){
+
+            case 'fetchProducts':
+         $model=$this->model->with('user')->orderBy('created_at','desc')->where('qty','>','0')->where('visible','<>','0')->paginate($per_page);
+
+            break;
+            case 'selectSchoolID':
+         $model=$this->model->with('user')->orderBy('created_at','desc')
+         ->where('qty','>','0')
+         ->where('visible','<>','0')
+         ->where('school_id',$request->selectSchoolID)
+         ->paginate($per_page);
+            break;
+                
+        }
         return $model;
     }
     public function withMeAndPage($per_page,$userID){

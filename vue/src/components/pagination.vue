@@ -14,7 +14,7 @@
 <script>
    import {mapState} from 'vuex'
     export default{
-        props:['last_page','method_name'],
+        props:['last_page','method_name','passpage','selectSchoolID'],
         data(){
             return{
                page:1,
@@ -22,11 +22,15 @@
                page_end:10,
             }
         },
-     
+        update(){
+            if(this.passpage){
+                this.page=this.passpage
+            }
+        },
         methods:{
              changePage(n){
             this.page=n
-            this.$emit('fetchProducts',{page:n,method_name:this.method_name})
+            this.$emit('fetchProducts',{page:n,method_name:this.method_name,selectSchoolID:this.selectSchoolID})
             if(this.last_page<10){
                 this.page_start=1,
                this.page_end=this.last_page
@@ -62,6 +66,10 @@
         'method_name':function(){
             this.changePage(1)
         },
+        'passpage':function(){
+                this.page=this.passpage
+            
+        }
     },
     computed:{
         pages(){

@@ -19,6 +19,7 @@ $factory->define(App\Entities\User::class, function (Faker\Generator $faker) {
         'name' => $faker->name,
         'account'=>$faker->username,
         'email' => $faker->unique()->safeEmail,
+        'school_id'=>$faker->numberBetween(1,370),
         'password' => $password ?: $password = bcrypt('secret'),
         'remember_token' => str_random(10),
     ];
@@ -26,6 +27,7 @@ $factory->define(App\Entities\User::class, function (Faker\Generator $faker) {
 $factory->define(App\Entities\Product::class,function(Faker\Generator $faker){
     return[
         'user_id'=>mt_rand(1,50),
+        'school_id'=>mt_rand(1,370),
         'name'=>$faker->word,
         'price'=>$faker->numberBetween(100,500),
         'description'=>$faker->paragraph,

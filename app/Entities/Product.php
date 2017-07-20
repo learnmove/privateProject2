@@ -12,7 +12,7 @@ class Product extends Model implements Transformable
     use TransformableTrait;
      protected $table="products";
      public $timestamps=true;
-    protected $fillable = ['visible','qty','name','price','description','user_id','img'];
+    protected $fillable = ['school_id','visible','qty','name','price','description','user_id','img'];
     //   protected static function boot()
     // {
     //     parent::boot();

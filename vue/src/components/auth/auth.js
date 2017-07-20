@@ -25,6 +25,13 @@
           }
         return false
       },
+         getUserSchoolId(){
+          if(localStorage.getItem('user')){
+         return JSON.parse(localStorage.getItem('user')).school_id
+            
+          }
+        return false
+      },
         getUserId(){
           if(localStorage.getItem('user')){
          return JSON.parse(localStorage.getItem('user')).id

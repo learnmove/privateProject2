@@ -10,7 +10,7 @@ class ProductsTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Entities\Product::class,100)->create()->each(function($p){
+        factory(App\Entities\Product::class,5000)->create()->each(function($p){
             $q=factory(App\Entities\ProductQuestion::class,20)->make();
             $p->questions()->saveMany($q );
         });

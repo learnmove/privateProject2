@@ -1,5 +1,5 @@
 <template>
-<nav class="navbar navbar-inverse">
+<nav class="navbar navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
@@ -7,7 +7,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span> 
       </button>
-      <a class="navbar-brand" ><router-link to="/"><a href="#"><span class="glyphicon glyphicon-user"></span> Salep</a></router-link></a>
+      <a class="navbar-brand" ><router-link to="/"><a href="#"><span class="glyphicon glyphicon-user"></span> 校園拍賣</a></router-link></a>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
