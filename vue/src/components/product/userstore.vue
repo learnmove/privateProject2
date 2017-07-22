@@ -49,32 +49,100 @@
         <a href="#" @click.prevent="purchase(product)" class="btn btn-default" role="button">放進購物車</a></p>
 
             </div>
+
           </div>
+   <button class="btn btn-primary" @click="showinput(product)">詢問/商品留言</button>
             
       </div>
     </div>
   </div>
   <div class="row">
-      
+            <modal title="Modal Title" :show="OpenModal" @cancel="cancel">
+          <div class="form-group"><input type="text" v-model="question_content" name="" id="" class="form-control"></div>
+          <button class="btn btn-primary" @click="sendQuestion">送出訊息</button>
+
+ <div class="media" v-for="question in questions">
+  <a class="media-left media-middle" href="#">
+  </a>
+  <div class="media-body">
+    <h4 class="media-heading">{{question.account}}</h4>
+    <div class="ask">
+        <div>
+         {{question.content}}
+        </div>
+    </div>
+    <div class="date">
+        {{question.created_at}}
+    </div>
+  </div>
+</div>
+
+<pagination @fetchProducts="questionPage" :passpage="question_page" :last_page="question_info.last_page"></pagination>
+
+
+</modal>
   </div>
 </div>
 </template>
 <script>
 import {mapActions,mapGetters,mapState} from 'vuex'
 import pagination from '../pagination'
+import modal from'@/components/plugin/Modal.vue'
+
     export default{
         beforeMount(){
             this.fetchProducts()
         },
         data(){
             return{
-          
+                  OpenModal:false,
+                questions:[{}],
+                question_info:{},
+                question_content:'',
+                question_page:'',
+                selectProduct:{}
+                
             }
         },
       
       methods:{
+               sendQuestion(){
+            this.axios.post(`/question`,{product_id:this.selectProduct.id,account:this.$auth.getUser().account,content:this.question_content})
+            .then(({data})=>{
+                this.$swal(data) 
+                this.question_content=''
+            this.fetchQuestion(this.selectProduct)
+        })
+          },
       
         //   ...mapActions('products',['fetchProducts'],this.page)
+         questionPage(pagination){
+            this.question_page=pagination.page
+            
+            this.fetchQuestion(this.selectProduct)
+            
+          },
+          cancel(){
+                this.OpenModal=false
+            
+          },
+          showinput(product){
+             this.question_page=1
+              
+            this.OpenModal=!this.OpenModal
+            if(this.OpenModal==true){
+            this.fetchQuestion(product)
+            }
+          },
+          fetchQuestion(product){
+              this.selectProduct=product
+            this.axios.get(`/question/${product.id}?page=${this.question_page}`)
+            .then(({data})=>{
+                this.questions=data.data
+                delete data.data
+                this.question_info=data
+            })
+          },
         fetchProducts(pagination={page:1}){
             return this.$store.dispatch('products/fetchUserProducts',
             {user_account:this.$route.params.user_account,
@@ -114,7 +182,8 @@ import pagination from '../pagination'
         ...mapState('products',['products','store_info']),
       },
       components:{
-          pagination
+          pagination,
+          modal
       }
     }
 </script>

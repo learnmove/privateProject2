@@ -34,7 +34,7 @@ class InvoiceItemRepositoryEloquent extends BaseRepository implements InvoiceIte
     {
         $this->pushCriteria(app(RequestCriteria::class));
     }
-    public function createItem($invoice,$items){
+    public function createItem($invoice,$items, $userID){
         $Invoiceitems=[];
         foreach($items as $item){
             $item['product_id']=$item['id'];
@@ -42,6 +42,7 @@ class InvoiceItemRepositoryEloquent extends BaseRepository implements InvoiceIte
             $item['item_total_qty']=$item['qty'];
             $product=$this->updateProductQty($item);
             $item['seller_id']=$product->user->id;
+            $item['buyer_id']=$userID;
             $Invoiceitems[]=$item;
         }
         $invoice->items()->createMany($Invoiceitems);

@@ -6,7 +6,7 @@
           <div class="form-group">
               <label for="" class="control-label col-sm-2">帳號</label>
               <div class="col-sm-10">
-              <input v-model="form.email" class=" form-control" type="text"  >
+              <input v-model="form.account" class=" form-control" type="text"  >
 
               </div>
               </div>
@@ -30,7 +30,7 @@
             return {
                 source:'/login',
                 form:{
-                    email:'',
+                    account:'',
                     password:''
                 },
                 user:{}

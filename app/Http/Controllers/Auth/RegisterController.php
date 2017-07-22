@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
+use App\Entities\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -51,6 +51,8 @@ class RegisterController extends Controller
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:6|confirmed',
+            'account' => 'required',
+            'school_id' => 'required',
             
         ]);
     }
@@ -69,7 +71,9 @@ class RegisterController extends Controller
         }
         return User::create([
             'name' => $rq['name'],
+            'account' => $rq['account'],
             'email' => $rq['email'],
+            'school_id' => $rq['school_id'],
             'password' => bcrypt($rq['password']),
         ]);
     }

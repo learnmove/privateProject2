@@ -29,7 +29,7 @@ class CreateProductQuestionsTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::drop('product_questions');
+		Schema::dropIfExists('product_questions');
 	}
 
 }

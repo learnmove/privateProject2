@@ -34,6 +34,6 @@ class ProductQuestionRepositoryEloquent extends BaseRepository implements Produc
         $this->pushCriteria(app(RequestCriteria::class));
     }
     public function FindProductIdQuestion($product_id){
-      return  $this->model->where('product_id',$product_id)->paginate(10);
+      return  $this->model->where('product_id',$product_id)->latest()->paginate(10);
     }
 }

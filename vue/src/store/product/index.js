@@ -12,7 +12,7 @@ const products={
     namespaced: true,
      state:{
           products:[],
-          edit_product:{},
+          edit_product:{category_id:''},
           store_info:{}
         },
      mutations: { 
@@ -25,7 +25,16 @@ const products={
              })
          },
          [types.edit_product](state,data){
-            state.edit_product=data
+             let product=data
+                state.edit_product=product
+
+                Object.defineProperty(
+                    state.edit_product,
+                    'category_id',
+                    {value:product.categories[0].id})
+                 
+                
+                 
          },
          [types.fetchMyProducts](state,data){
             state.products=data
@@ -39,8 +48,8 @@ const products={
    },
      actions: { 
       
-        fetchProducts({commit},{page,method_name,selectSchoolID}){
-            Vue.axios.get(`/product?page=${page}&method_name=${method_name}&selectSchoolID=${selectSchoolID}`)
+        fetchProducts({commit},{page,method_name,keyword='',selectSchoolID,category_id=''}){
+            Vue.axios.get(`/product?page=${page}&method_name=${method_name}&selectSchoolID=${selectSchoolID}&category_id=${category_id}&keyword=${keyword}`)
             .then(({data})=>{
                 commit(types.set_products,data)
             })

@@ -22,7 +22,12 @@ class ProductController extends Controller
      public function __construct(ProductService $productService,ProductRepository $productRepository){
      $this->productRepository=$productRepository;
      $this->productService=$productService;
-     $this->middleware('jwt.auth')->except('index','show','getSellerStore','getSchoolList');
+     $this->middleware('jwt.auth')
+     ->except(
+         'index',
+         'show',
+         'getSellerStore',
+         'getSchoolList','getCategoryList');
      if(JWTAuth::getToken()){
      $this->userID=JWTAuth::parseToken()->authenticate()->id;
      }
@@ -56,7 +61,7 @@ class ProductController extends Controller
         if($path){
         $request['img']=$path;
         }
-        $product=$this->productRepository->createProduct($request->all());
+        $product=$this->productRepository->createProduct($request);
         return response()->json(['上傳成功']);
     }
 
@@ -79,8 +84,7 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        $product=$this->productRepository->find($id);
-
+        $product=$this->productRepository->with(['categories'])->find($id);
         return response()->json($product);
         //
     }
@@ -98,7 +102,7 @@ class ProductController extends Controller
         if($imgpath){
         $request['img']=$imgpath;
         }
-        $updateMessage=$this->productRepository->updateProduct($id,$request->all());
+        $updateMessage=$this->productRepository->updateProduct($id,$request);
     return response()->json([$updateMessage]);
     }
 
@@ -125,6 +129,10 @@ class ProductController extends Controller
     public function getSchoolList(){
        $schools= DB::table('school')->get();
      return response()->json($schools );
+    }
+     public function getCategoryList(){
+       $categories= DB::table('categories')->get();
+     return response()->json($categories );
     }
 
 }

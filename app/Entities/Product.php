@@ -18,6 +18,9 @@ class Product extends Model implements Transformable
     //     parent::boot();
     //     static::addGlobalScope(new ProductScope);
     // }
+    public function scopeSearch($q,$keyword){
+     return $q->where('name', 'like', '%'.$keyword.'%');
+    }
     public function user(){
         return  $this->belongsTo(\App\Entities\User::class);
     }
@@ -27,5 +30,10 @@ class Product extends Model implements Transformable
     public function questions(){
         return $this->hasMany(\App\Entities\ProductQuestion::class,'product_id','id');
     }
-
+    public function categories(){
+        return $this->belongsToMany(Category::class,'product_category','product_id','category_id');
+    }
+    public function school(){
+        return $this->belongsTo(School::class);
+    }
 }

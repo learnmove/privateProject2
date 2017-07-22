@@ -64,7 +64,7 @@ class InvoicesController extends Controller
     {
         $request['user_id']=$this->userID;
         $invoice=$this->invoiceRepository->createInvoice($request->except('items'));
-        $this->invoiceItemRepository->createItem($invoice,$request['items']);
+        $this->invoiceItemRepository->createItem($invoice,$request['items'],$this->userID);
              return response()->json(
                    '已下訂單'
                 );

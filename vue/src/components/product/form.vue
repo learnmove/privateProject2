@@ -60,6 +60,20 @@
                             <input type="file" @change="imgChg" name="" id="" class="form-control">
                         </div>
                     </div>
+                      <div class="form-group" >
+                        <div class="col-sm-2">
+                            <label for="">分類</label>
+                            
+                        </div>
+                        <div class="col-sm-10">
+                        <select class="selectpicker" v-model="form.category_id">
+                            <option v-for="category in categories" :value="category.id" >{{category.name}}</option>
+                        
+                            </select>
+
+                        </div>
+                    </div>
+            
                     <button class="btn btn-primary">送出</button>
                  </form>
                     
@@ -78,9 +92,11 @@
                 description:'',
                 price:'',
                 img:'',
-                qty:'1'
+                qty:'1',
+                category_id:'1'
                 
             },
+            categories:[],
             errors:{
 
             },
@@ -89,6 +105,7 @@
         }
     },
     beforeMount(){
+        this.fetchCategoryList()
         if(this.$route.meta.edit){
             this.source=`/product/${this.$route.params.pid}/edit`
             this.$store.dispatch('products/editProduct',this.source)
@@ -117,6 +134,10 @@
             .then(({data})=>{this.$swal(data[0]);this.$router.push({name:'product'});})
             .catch((error)=>console.log(this.errors=error.response.data))
         },
+        fetchCategoryList(){
+              this.axios.get('/categorylist')
+              .then(({data})=>{this.categories=data})
+          },
      
     },
     computed:{

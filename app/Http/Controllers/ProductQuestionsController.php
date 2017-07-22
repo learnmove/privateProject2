@@ -47,8 +47,11 @@ class ProductQuestionsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(ProductQuestionCreateRequest $request)
+    public function store(Request $request)
     {
+        $this->repository->create($request->all());
+        
+        return response()->json('留言成功');
     }
 
 

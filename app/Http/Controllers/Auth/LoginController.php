@@ -24,8 +24,9 @@ class LoginController extends Controller
      protected function validator(Request $rq)
     {
         return Validator::make($rq->all(), [
-            'email' => 'required|email|max:255',
+            // 'email' => 'required|email|max:255',
             'password' => 'required|min:6',
+            'account'=>'required'
             
         ]);
        
@@ -40,7 +41,7 @@ class LoginController extends Controller
         if($v->fails()){
             return $this->rj(['error'=>$v->messages()],404);
         }
-         $credential=$rq->only('email','password');
+         $credential=$rq->only('account','password');
         try{
             if(!$token=JWTAuth::attempt($credential)){
                 return $this->rj(["帳號密碼錯誤"],401);

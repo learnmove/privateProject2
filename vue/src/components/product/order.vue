@@ -47,7 +47,7 @@
                     {{item.item_total_qty}} 
                     </td>
                 <td>${{item.item_total_price}} </td>
-                <td>{{item.product.user.account}} </td>
+                <td><router-link :to="{name:'userstore',params:{'user_account':item.product.user.account}}">{{item.product.user.account}} </router-link> </td>
             </tr>
             
             <!--<tr>

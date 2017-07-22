@@ -6,6 +6,13 @@
           <div class="form-group">
               <label for="" class="control-label col-sm-2">帳號</label>
               <div class="col-sm-10">
+              <input v-model="form.account" class=" form-control" type="text" placeholder="y5824u" >
+
+              </div>
+              </div>
+                <div class="form-group">
+              <label for="" class="control-label col-sm-2">信箱</label>
+              <div class="col-sm-10">
               <input v-model="form.email" class=" form-control" type="text" placeholder="*@gmail.com" >
 
               </div>
@@ -28,6 +35,16 @@
           <input v-model="form.name" type="text" name="" id="" class="form-control">
       </div>
   </div>
+  <div class="form-group">
+
+         <label for="" class="col-sm-2 control-label">學校</label>
+      <div class="col-sm-10">
+         <select class="form-control" v-model="form.school_id" id="">
+      <option v-for="school in schools" :value="school.id">{{school.name}} </option>
+  </select> 
+      </div>
+      
+  </div>
   <button type="submit" class="btn btn-primary pull-right">註冊</button>
       </form>
           </div>
@@ -43,13 +60,25 @@
                     email:'',
                     password:'',
                     password_confirmation:'',
-                    name:''
+                    name:'',
+                    school_id:'',
+                    account:''
                 },
+                    schools:[],
+                
                 source:'/register'
 
             }
         },
+        beforeMount(){
+            this.fetchSchoolList()
+        }
+        ,
         methods:{
+             fetchSchoolList(){
+              this.axios.get('/schoolist')
+              .then(({data})=>{this.schools=data})
+          },
             signup(){
                 this.axios.post(this.source,this.form)
                 .then(({data})=>{
