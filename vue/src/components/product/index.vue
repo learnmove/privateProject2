@@ -69,7 +69,7 @@
             <div class="">
         <a href="#" @click.prevent="purchase(product)" class="btn btn-default" role="button">放進購物車</a></p>
         <button class="btn btn-primary" @click="showinput(product)">詢問/商品留言</button>
-        
+        <button class="btn btn-danger">聊聊</button>
             </div>
             
       </div>

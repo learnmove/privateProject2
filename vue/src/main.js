@@ -9,10 +9,19 @@ import axios from 'axios'
 import vueaxios from 'vue-axios'
 import VueSweetAlert from 'vue-sweetalert'
 import Auth from './components/auth/auth.js'
+import VueEcho from 'vue-echo'
+const io = window.io = require('socket.io-client');
+
 Vue.use(VueSweetAlert)
 Vue.config.productionTip = false
 Vue.use(vueaxios,axios)
 Vue.use(Auth)
+Vue.use(VueEcho,{
+    broadcaster: 'socket.io',
+  key:'36e77906f0963e755c057cf3bb2cf1da',
+  host: 'http://localhost:6001'
+
+})
 Vue.axios.defaults.baseURL="http://localhost/laravel/ProductSale/public/api/"
 Vue.axios.defaults.headers.common['Authorization']='Bearer '+Vue.auth.getToken()
  router.beforeEach((to, from, next) => {

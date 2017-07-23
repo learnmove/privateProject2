@@ -57,5 +57,6 @@ app:'./src/main.js'
         }
       }
     ]
-  }
+  },
+  plugins:[]
 }

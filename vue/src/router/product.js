@@ -62,7 +62,7 @@ import UserRating from '@/components/product/rating'
      name:'userstore',
      component:UserStore,
      path:'/product/:user_account'
- },
+ }
 
 
  

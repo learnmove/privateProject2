@@ -4,6 +4,7 @@ import Hello from '@/components/Hello'
 import Login from '@/components/auth/Login'
 import Signup from '@/components/auth/Signup'
 import product from './product'
+import chat from './chat'
 Vue.use(Router)
 
 export default new Router({
@@ -35,6 +36,7 @@ export default new Router({
     },
     ...product
     ,    
+    ...chat
   
   ]
 })

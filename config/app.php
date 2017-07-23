@@ -177,7 +177,7 @@ return [
         App\Providers\AuthServiceProvider::class,
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
 
-        // App\Providers\BroadcastServiceProvider::class,
+        App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 

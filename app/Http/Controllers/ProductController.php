@@ -9,6 +9,7 @@ use JWTAuth;
 use App\Services\ProductService;
 use App\Http\Requests\ProductRequest;
 use DB;
+use Redis;
 class ProductController extends Controller
 {
     /**
