@@ -18,7 +18,9 @@ class CreatePrivateMessagesTable extends Migration
             $table->integer('sender_id')->unsigned();
             $table->integer('receiver_id')->unsigned();
             $table->text('message');
-            $table->boolean('read');
+            $table->boolean('read')->default(0);
+            $table->integer('channel_id')->unsigned();
+            
             $table->timestamps();
             $table->index('sender_id');
             $table->index('receiver_id');

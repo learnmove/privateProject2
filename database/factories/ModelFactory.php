@@ -19,6 +19,7 @@ $factory->define(App\Entities\User::class, function (Faker\Generator $faker) {
         'name' => $faker->name,
         'account'=>$faker->username,
         'email' => $faker->unique()->safeEmail,
+        'avatar'=>$faker->imageUrl(50,50),
         'school_id'=>$faker->numberBetween(1,370),
         'password' => $password ?: $password = bcrypt('secret'),
         'remember_token' => str_random(10),
@@ -54,4 +55,9 @@ $factory->define(App\Entities\ProductQuestion::class,function(Faker\Generator $f
      'account'=>$faker->username,
      'content'=>$faker->sentence
   ]  ;
+});
+$factory->define(App\Entities\PrivateMessage::class,function(Faker\Generator $faker){
+    return   [ 
+           'receiver_id'=>mt_rand(1,50),
+         'message'=>$faker->sentence,'read'=>0];
 });

@@ -37,10 +37,8 @@ class MessagePosted  implements ShouldBroadcast
     public function broadcastOn()
     {
         // return new PrivateChannel('channel-name');
-        // return new Channel('chat-room.1');
-        $this->message->message='fuck';
-        $this->message->save();
-        return ['chat-room.1'];
+        return new PrivateChannel('chat_lists.'.$this->message->channel_id);
+        
     }
     public function broadcastAs()
         {

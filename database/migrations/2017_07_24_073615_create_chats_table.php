@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateInvoicesTable extends Migration
+class CreateChatsTable extends Migration
 {
 
 	/**
@@ -13,11 +13,9 @@ class CreateInvoicesTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('invoices', function(Blueprint $table) {
+		Schema::create('chats', function(Blueprint $table) {
             $table->increments('id');
-			$table->integer('user_id');
-			$table->integer('total_price');
-			$table->integer('total_qty');
+
             $table->timestamps();
 		});
 	}
@@ -29,7 +27,7 @@ class CreateInvoicesTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::drop('invoices');
+		Schema::drop('chats');
 	}
 
 }

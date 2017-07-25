@@ -19,10 +19,13 @@ Vue.use(Auth)
 Vue.use(VueEcho,{
     broadcaster: 'socket.io',
   key:'36e77906f0963e755c057cf3bb2cf1da',
-  host: 'http://localhost:6001'
+  host: 'http://localhost:6001',
+  auth:{headers:{
+    Authorization:'Bearer '+Vue.auth.getToken()
+  }}
 
 })
-Vue.axios.defaults.baseURL="http://localhost/laravel/ProductSale/public/api/"
+Vue.axios.defaults.baseURL="http://114.33.199.92/laravel/ProductSale/public/api/"
 Vue.axios.defaults.headers.common['Authorization']='Bearer '+Vue.auth.getToken()
  router.beforeEach((to, from, next) => {
   if(to.matched.some(record=>record.meta.forVisitors))

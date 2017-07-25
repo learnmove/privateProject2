@@ -23,7 +23,8 @@ class User extends Model implements Transformable
         'name', 
         'email'
         , 'password'
-        ,'account'
+        ,'account',
+        'avatar'
     ];
 
     /**
@@ -44,4 +45,26 @@ class User extends Model implements Transformable
     public function user_post_rating(){
         return $this->hasMany(Rating::class);
     }
+    public function chat_user(){
+        return $this->belongsToMany(User::class,'chat_lists','user_id','chat_id')->withTimestamps()->withPivot('id');
+    }
+    public function chat_me(){
+        return $this->belongsToMany(User::class,'chat_lists','chat_id','user_id')->withTimestamps()->withPivot('id');
+    }
+    public function have_chat(){
+        return $this->chat_user()
+        ->get()
+        ->merge($this->chat_me()
+        ->get())
+        ;
+    }
+    public function sender(){
+        return $this->belongsToMany(User::class,'private_messages','sender_id','receiver_id')->withTimestamps();
+        
+    }
+      public function receiver(){
+        return $this->belongsToMany(User::class,'private_messages','receiver_id','sender_id');
+        
+    }
+
 }

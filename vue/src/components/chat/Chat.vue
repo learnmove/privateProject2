@@ -34,7 +34,8 @@
             </div>
             <div class="member_list">
                <ul class="list-unstyled">
-                  <li class="left clearfix">
+                
+                          <!--<li class="left clearfix">
                      <span class="chat-img pull-left">
                      <img src="https://lh6.googleusercontent.com/-y-MY2satK-E/AAAAAAAAAAI/AAAAAAAAAJU/ER_hFddBheQ/photo.jpg" alt="User Avatar" class="img-circle">
                      </span>
@@ -47,14 +48,14 @@
                            <strong class="primary-font">(123) 123-456</strong> <span class="badge pull-right">3</span>
                         </div>
                      </div>
-                  </li>
-                  <li class="left clearfix">
+                  </li>-->
+                         <li @click="setChatUser(user)" v-for="user in chat_data" class="left clearfix">
                      <span class="chat-img pull-left">
                      <img src="https://lh6.googleusercontent.com/-y-MY2satK-E/AAAAAAAAAAI/AAAAAAAAAJU/ER_hFddBheQ/photo.jpg" alt="User Avatar" class="img-circle">
                      </span>
-                     <div class="chat-body clearfix">
+                     <div class="chat-body clearfix" >
                         <div class="header_sec">
-                           <strong class="primary-font">Jack Sparrow</strong> <strong class="pull-right ">
+                           <strong class="primary-font">{{user.name}}</strong> <strong class="pull-right">
                            09:45AM</strong>
                         </div>
                         <div class="contact_sec">
@@ -62,76 +63,7 @@
                         </div>
                      </div>
                   </li>
-                  <li class="left clearfix">
-                     <span class="chat-img pull-left">
-                     <img src="https://lh6.googleusercontent.com/-y-MY2satK-E/AAAAAAAAAAI/AAAAAAAAAJU/ER_hFddBheQ/photo.jpg" alt="User Avatar" class="img-circle">
-                     </span>
-                     <div class="chat-body clearfix">
-                        <div class="header_sec">
-                           <strong class="primary-font">Jack Sparrow</strong> <strong class="pull-right">
-                           09:45AM</strong>
-                        </div>
-                        <div class="contact_sec">
-                           <strong class="primary-font">(123) 123-456</strong> <span class="badge pull-right">3</span>
-                        </div>
-                     </div>
-                  </li>
-                          <li class="left clearfix">
-                     <span class="chat-img pull-left">
-                     <img src="https://lh6.googleusercontent.com/-y-MY2satK-E/AAAAAAAAAAI/AAAAAAAAAJU/ER_hFddBheQ/photo.jpg" alt="User Avatar" class="img-circle">
-                     </span>
-                     <div class="chat-body clearfix">
-                        <div class="header_sec">
-                           <strong class="primary-font">Jack Sparrow</strong> <strong class="pull-right">
-                           09:45AM</strong>
-                        </div>
-                        <div class="contact_sec">
-                           <strong class="primary-font">(123) 123-456</strong> <span class="badge pull-right">3</span>
-                        </div>
-                     </div>
-                  </li>
-                          <li class="left clearfix">
-                     <span class="chat-img pull-left">
-                     <img src="https://lh6.googleusercontent.com/-y-MY2satK-E/AAAAAAAAAAI/AAAAAAAAAJU/ER_hFddBheQ/photo.jpg" alt="User Avatar" class="img-circle">
-                     </span>
-                     <div class="chat-body clearfix">
-                        <div class="header_sec">
-                           <strong class="primary-font">Jack Sparrow</strong> <strong class="pull-right">
-                           09:45AM</strong>
-                        </div>
-                        <div class="contact_sec">
-                           <strong class="primary-font">(123) 123-456</strong> <span class="badge pull-right">3</span>
-                        </div>
-                     </div>
-                  </li>
-                          <li class="left clearfix">
-                     <span class="chat-img pull-left">
-                     <img src="https://lh6.googleusercontent.com/-y-MY2satK-E/AAAAAAAAAAI/AAAAAAAAAJU/ER_hFddBheQ/photo.jpg" alt="User Avatar" class="img-circle">
-                     </span>
-                     <div class="chat-body clearfix">
-                        <div class="header_sec">
-                           <strong class="primary-font">Jack Sparrow</strong> <strong class="pull-right">
-                           09:45AM</strong>
-                        </div>
-                        <div class="contact_sec">
-                           <strong class="primary-font">(123) 123-456</strong> <span class="badge pull-right">3</span>
-                        </div>
-                     </div>
-                  </li>
-                          <li class="left clearfix">
-                     <span class="chat-img pull-left">
-                     <img src="https://lh6.googleusercontent.com/-y-MY2satK-E/AAAAAAAAAAI/AAAAAAAAAJU/ER_hFddBheQ/photo.jpg" alt="User Avatar" class="img-circle">
-                     </span>
-                     <div class="chat-body clearfix">
-                        <div class="header_sec">
-                           <strong class="primary-font">Jack Sparrow</strong> <strong class="pull-right">
-                           09:45AM</strong>
-                        </div>
-                        <div class="contact_sec">
-                           <strong class="primary-font">(123) 123-456</strong> <span class="badge pull-right">3</span>
-                        </div>
-                     </div>
-                  </li>
+
                </ul>
             </div></div>
          </div>
@@ -156,12 +88,22 @@
 		 
 		 <div class="chat_area">
 		 <ul class="list-unstyled">
-		 <li class="left clearfix">
+		 <li class="left clearfix" :class="{'admin_chat':chat_content.sender_id==$auth.getUserId()}" v-for="chat_content in chatContentData.data">
+                     <span class="chat-img1 " :class="{'pull-left':chat_content.sender_id!=$auth.getUserId(),'pull-right':chat_content.sender_id==$auth.getUserId()}">
+                     <img :src="SenderIsMe==true?nowChatUser.avatar:$auth.getUser().avatar" alt="User Avatar" class="img-circle">
+                     </span>
+                     <div class="chat-body1 clearfix">
+                        <p :class="{'pull-left':chat_content.sender_id!=$auth.getUserId(),'pull-right':chat_content.sender_id==$auth.getUserId()}">{{chat_content.message}}</p>
+						<div class="chat_time " :class="{'pull-left':!chat_content.sender_id==$auth.getUserId(),'pull-right':chat_content.sender_id==$auth.getUserId()}">{{chat_content.created_at}}</div>
+                     </div>
+                  </li>
+				  
+						 <!--<li class="left clearfix">
                      <span class="chat-img1 pull-left">
                      <img src="https://lh6.googleusercontent.com/-y-MY2satK-E/AAAAAAAAAAI/AAAAAAAAAJU/ER_hFddBheQ/photo.jpg" alt="User Avatar" class="img-circle">
                      </span>
                      <div class="chat-body1 clearfix">
-                        <p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia.</p>
+                        <p v-if="">Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia.</p>
 						<div class="chat_time pull-right">09:40PM</div>
                      </div>
                   </li>
@@ -173,18 +115,17 @@
                         <p>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia.</p>
     					<div class="chat_time pull-left">09:40PM</div>
                      </div>
-                  </li>
+                  </li>-->
 				  
-				
 		 
 		 
 		 </ul>
 		 </div><!--chat_area-->
           <div class="message_write">
-    	 <textarea class="form-control" placeholder="type a message"></textarea>
+    	 <textarea v-model="message" class="form-control" placeholder="type a message"></textarea>
 		 <div class="clearfix"></div>
 		 <div class="chat_bottom">
- <a href="#" class="pull-left btn btn-success">
+ <a href="#" class="pull-left btn btn-success" @click.prevent="postMessage">
  Send</a></div>
 		 </div>
 		 </div>
@@ -196,13 +137,76 @@
   </div>
 </template>
 <script>
+import {mapActions,mapState,mapGetters} from 'vuex'
 export default{
+  
+    data(){
+        return{
+            chatContentData:[],
+            nowChatUser:{},
+            SenderIsMe:'',
+            message:''
+        }
+    },
     beforeMount(){
-    this.$echo.channel('chat-room.1')
-        .listen('.event',function(data){
-            console.log(data)
+        this.$store.dispatch('chat/getChatlist')
+        
+        
+    // this.axios.get(`/chatcontent?chat_id=${}`)
+    },
+    computed:{
+       ...mapState('chat',['chat_data']),
+    },
+    watch:{
+        chat_data:function(){
+        this.getChannel()
+        }
+    },
+    methods:{
+        getChannel(){
+                 let roomID=new Array()
+                 let that=this
+            this.chat_data.map((item)=>{
+                roomID.push(item.pivot.id)
         })
- 
+        roomID.forEach(function(id,index) {
+            let room_id=id
+        this.$echo.private(`chat_lists.${room_id}`)
+        .listen('.event',function(data){
+            // if(data.user.account!=that.$auth.getUser().account){
+                that.chatContentData.data.push(data.message)
+            // }
+                })  
+        }, this)
+        },
+        setChatUser(user){
+        //    this.$echo.private(`chat_lists.${this.nowChatUser.pivot.id}`);
+
+            this.nowChatUser=user
+            this.axios.get(`/getChatContent?sender_id=${user.id}`)
+            .then(({data})=>{
+                data.data=data.data.reverse()
+                this.chatContentData=data
+            })
+    
+
+        },
+        checkSenderIsMe(sender_id){
+        if(sender_id==this.$auth.getUserId()){
+            this.SenderIsMe=true
+        }else{
+            this.SenderIsMe=false
+        }
+         return   this.SenderIsMe
+        },
+        postMessage(){
+            this.axios.post('/postMessage',{message:this.message,sender_id:this.$auth.getUserId(),receiver_id:this.nowChatUser.id,channel_id:this.nowChatUser.pivot.id})
+            .then(({data})=>{
+                this.chatContentData.data.push(data)
+                this.message=''
+            })
+        }
+      
     }
 }
 </script>

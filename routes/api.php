@@ -25,3 +25,7 @@ Route::resource('/rating','RatingController');
 Route::post('/itemfeedback','RatingController@ItemfFeedBack');
 Route::resource('/question','ProductQuestionsController');
 Route::resource('/invoice','InvoicesController');
+Route::post('/addChatUser','ChatController@addChatUser');
+Route::get('/getChatUser','ChatController@getChatUser');
+Route::get('/getChatContent','ChatController@getChatContent');
+Route::post('/postMessage','ChatController@postMessage');

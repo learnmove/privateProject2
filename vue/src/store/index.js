@@ -4,6 +4,8 @@ import Vuex from 'vuex'
 import products from './product/index'
 import cart from './cart/index'
 import ratings from './ratings/index'
+import chat from './chat/index'
+
 Vue.use(Vuex);
 
  const store=new Vuex.Store({
@@ -18,7 +20,8 @@ Vue.use(Vuex);
     modules:{
         products,
         cart,
-        ratings
+        ratings,
+        chat
     }
 
 })
