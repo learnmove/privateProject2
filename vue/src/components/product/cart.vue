@@ -53,7 +53,7 @@ import {mapState,mapGetters} from 'vuex'
                     this.$swal(data)
                     this.$store.dispatch('cart/clearnItems')
                 })
-                .then((error)=>console.log(error.response))
+                .catch((error)=>console.log(error.response))
             },
             removeItem(item){
                 this.$store.dispatch('cart/removeItem',item)

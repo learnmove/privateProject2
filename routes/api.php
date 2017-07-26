@@ -29,3 +29,6 @@ Route::post('/addChatUser','ChatController@addChatUser');
 Route::get('/getChatUser','ChatController@getChatUser');
 Route::get('/getChatContent','ChatController@getChatContent');
 Route::post('/postMessage','ChatController@postMessage');
+Route::get('/Getnotify','NotificationController@Getnotify');
+Route::get('/MarkRead','NotificationController@MarkRead');
+Route::get('/ReadChannel','ChatController@ReadChannel');

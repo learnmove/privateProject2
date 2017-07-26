@@ -106,10 +106,10 @@ class ProductRepositoryEloquent extends BaseRepository implements ProductReposit
         $method_name=$request->method_name;
             switch ($method_name){
             case 'fetchMyProducts':
-            $model=$this->model->with('user')->where('user_id',$userID)->where('visible','<>','0')->orderBy('created_at','desc')->paginate($per_page);
+            $model=$this->model->with('user','categories')->where('user_id',$userID)->where('visible','<>','0')->orderBy('created_at','desc')->paginate($per_page);
             break;
             case 'sellout':
-            $model=$this->model->with('user')->where('user_id',$userID)->where('qty',0)->orderBy('created_at','desc')->paginate($per_page);
+            $model=$this->model->with('user','categories')->where('user_id',$userID)->where('qty',0)->orderBy('created_at','desc')->paginate($per_page);
             break;
         }
     

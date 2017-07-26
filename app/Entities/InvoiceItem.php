@@ -23,6 +23,13 @@ class InvoiceItem extends Model implements Transformable
     public function rating(){
         return $this->hasOne(Rating::class,'item_id','id');
     }
+    public function seller(){
+        return $this->belongsTo(User::class,'seller_id','id');
+    }
+    public function buyer(){
+        return $this->belongsTo(User::class,'buyer_id','id');
+    }
+    
     public function rating_comment(){
         return $this->hasOne(RatingComment::class,'item_id','id');
     }

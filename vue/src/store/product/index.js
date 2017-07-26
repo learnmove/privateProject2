@@ -27,11 +27,12 @@ const products={
          [types.edit_product](state,data){
              let product=data
                 state.edit_product=product
+                state.edit_product.category_id=product.categories[0].id
 
-                Object.defineProperty(
-                    state.edit_product,
-                    'category_id',
-                    {value:product.categories[0].id})
+                // Object.defineProperty(
+                //     state.edit_product,
+                //     'category_id',
+                //     {value:product.categories[0].id})
                  
                 
                  

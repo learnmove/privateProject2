@@ -1,6 +1,7 @@
 import Vue from 'vue'
 const types={
-    getChatlist:'get_chat_list'
+    getChatlist:'get_chat_list',
+    setUnread:'setUnread'
 }
 const chat={
     namespaced: true,
@@ -17,6 +18,14 @@ const chat={
                 Object.assign(state.chat_data, data)
                  
             
+        },
+        [types.setUnread](state,user){
+            let index=state.chat_data.indexOf(user)
+            //  state.chat_data[index].unread_id=0
+                Object.defineProperty(
+         state.chat_data[index].pivot,
+        'unread_id',
+        {value:0})
         }
     },
     actions:{
@@ -25,6 +34,9 @@ const chat={
     .then(({data})=>{
         commit(types.getChatlist,data)
     })
+        },
+        setUnread({commit},user){
+            commit(types.setUnread,user)
         }
     },
     getters:{

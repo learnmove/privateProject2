@@ -10,8 +10,8 @@ use Prettus\Validator\Exceptions\ValidatorException;
 use App\Http\Requests\ProductQuestionCreateRequest;
 use App\Http\Requests\ProductQuestionUpdateRequest;
 use App\Repositories\ProductQuestionRepository;
-
-
+use JWTAuth;
+use App\Entities\User;
 class ProductQuestionsController extends Controller
 {
 
@@ -24,10 +24,13 @@ class ProductQuestionsController extends Controller
      * @var ProductQuestionValidator
      */
     protected $validator;
-
+    protected $user;
     public function __construct(ProductQuestionRepository $repository)
     {
         $this->repository = $repository;
+        if(JWTAuth::getToken()){
+            $this->user=JWTAuth::parseToken()->authenticate();
+        }
     }
 
 
@@ -49,8 +52,9 @@ class ProductQuestionsController extends Controller
      */
     public function store(Request $request)
     {
-        $this->repository->create($request->all());
-        
+        $this->repository->create($request->except('seller_id'));
+        $seller=User::find($request->seller_id);
+       $seller->notify(new \App\Notifications\ProductQuestion($request->product_id,$request->account,$request->content));
         return response()->json('留言成功');
     }
 

@@ -8,7 +8,9 @@
         <span class="icon-bar"></span> 
       </button>
       <a class="navbar-brand" ><router-link to="/"><a href="#"><span class="glyphicon glyphicon-user"></span> 校園拍賣</a></router-link></a>
+      
     </div>
+   
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav">
         <li class="active"><router-link :to="{name:'product'}"><a href="#">商品</a></router-link></li>

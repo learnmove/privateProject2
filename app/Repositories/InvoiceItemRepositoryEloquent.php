@@ -8,6 +8,7 @@ use App\Repositories\invoiceItemRepository;
 use App\Entities\InvoiceItem;
 use App\Validators\InvoiceItemValidator;
 use App\Entities\Product;
+use JWTAuth;
 /**
  * Class InvoiceItemRepositoryEloquent
  * @package namespace App\Repositories;
@@ -35,6 +36,7 @@ class InvoiceItemRepositoryEloquent extends BaseRepository implements InvoiceIte
         $this->pushCriteria(app(RequestCriteria::class));
     }
     public function createItem($invoice,$items, $userID){
+  $user=JWTAuth::parseToken()->authenticate();
         $Invoiceitems=[];
         foreach($items as $item){
             $item['product_id']=$item['id'];
@@ -48,6 +50,8 @@ class InvoiceItemRepositoryEloquent extends BaseRepository implements InvoiceIte
         $invoice->items()->createMany($Invoiceitems);
         foreach($invoice->items as $item){
             $item->itemStatus()->attach(1);
+            $item->seller->notify(new \App\Notifications\ProductPurchased($item));
+            
         }
         return $invoice->items;
     

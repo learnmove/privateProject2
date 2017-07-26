@@ -47,7 +47,11 @@
                     {{item.item_total_qty}} 
                     </td>
                 <td>${{item.item_total_price}} </td>
-                <td><router-link :to="{name:'userstore',params:{'user_account':item.product.user.account}}">{{item.product.user.account}} </router-link> </td>
+                <td>
+                    <router-link :to="{name:'userstore',params:{'user_account':item.product.user.account}}">{{item.product.user.account}} </router-link>
+                    <button class="btn btn-danger" @click="chat_select(item.seller_id)">聊聊</button>
+
+                 </td>
             </tr>
             
             <!--<tr>
@@ -124,6 +128,12 @@ import Rate from '@/components/plugin/Rate.vue'
         
     },
     methods:{
+          chat_select(seller_id){
+              this.axios.post('/addChatUser',{chat_id:seller_id})
+              .then(({data})=>{
+                this.$router.push({name:'chat'})
+            })
+          },
         filter_buy(method_name){
             this.method_name=method_name;
         },
@@ -134,7 +144,6 @@ import Rate from '@/components/plugin/Rate.vue'
       itemfeedback(item){
         this.axios.post('/itemfeedback',{item:item})
         .then(({data})=>{
-            console.log(data)
             this.$swal('評價成功')
             this.fetchData()
     })
@@ -149,7 +158,6 @@ import Rate from '@/components/plugin/Rate.vue'
 
             this.axios.put(`/items/${item.id}`,{status:status})
             .then(({data})=>{
-                console.log(data);
        this.fetchData()
                 this.$router.push({redirect:{name:'sellout'}})
                 })
@@ -158,7 +166,7 @@ import Rate from '@/components/plugin/Rate.vue'
         fetchData(){
              this.axios.get(`invoice?page=${this.page}&method_name=${this.method_name}`)
         .then(({data})=>{
-            this.orders=data.data;console.log(data);
+            this.orders=data.data;
             delete data.data
             this.order_info=data
         })

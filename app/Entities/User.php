@@ -32,6 +32,11 @@ class User extends Model implements Transformable
      *
      * @var array
      */
+
+      public function receivesBroadcastNotificationsOn()
+    {
+        return 'App.User.'.$this->id;
+    }
     protected $hidden = [
         'password', 'remember_token',
     ];
@@ -46,10 +51,10 @@ class User extends Model implements Transformable
         return $this->hasMany(Rating::class);
     }
     public function chat_user(){
-        return $this->belongsToMany(User::class,'chat_lists','user_id','chat_id')->withTimestamps()->withPivot('id');
+        return $this->belongsToMany(User::class,'chat_lists','user_id','chat_id')->withTimestamps()->withPivot(['id','unread_id']);
     }
     public function chat_me(){
-        return $this->belongsToMany(User::class,'chat_lists','chat_id','user_id')->withTimestamps()->withPivot('id');
+        return $this->belongsToMany(User::class,'chat_lists','chat_id','user_id')->withTimestamps()->withPivot(['id','unread_id']);
     }
     public function have_chat(){
         return $this->chat_user()

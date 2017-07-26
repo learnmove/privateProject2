@@ -25,6 +25,7 @@
   </div>
 </template>
 <script>
+import Vue from 'vue'
     export default{
         data(){
             return {
@@ -46,7 +47,10 @@
                 .then(({data})=>{
                     this.$auth.setAuth(data.token,data.user)
                     this.$router.push({name:'hello'})
+                   location.reload();
+                    
             })
+            
             .catch((error)=>{this.$swal('帳號密碼錯誤')})
            
             }

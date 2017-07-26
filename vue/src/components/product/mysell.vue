@@ -10,6 +10,9 @@
 </ul>
   <div class="col-sm-6 col-md-4" v-for="product in products.data">
     <div class="thumbnail">
+         <div class="category_name">
+        【{{product.categories[0].name}}】
+        </div>
       <div v-if="product.user_id==$auth.getUser().id" class="text-right text-danger">
           <button @click="deleteProduct(product)" class="btn btn-danger">x</button>
           <router-link tag="button" class="btn btn-primary" :to="{name:'product_edit',params:{pid:product.id}}">俢改</router-link>

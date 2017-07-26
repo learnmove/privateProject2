@@ -17,6 +17,7 @@ class CreateChatListsTable extends Migration
             $table->increments('id');
             $table->integer('user_id');
             $table->integer('chat_id');
+            $table->integer('unread_id')->nullable();
             $table->timestamps();
         });
     }

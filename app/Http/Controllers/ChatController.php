@@ -107,7 +107,7 @@ class ChatController extends Controller
         $user=User::with([
             'chat_me','chat_user'
                 ])->find($this->userID);
-        $list=collect($user->have_chat())->sortByDesc('pivot.created_at')->values()->all();
+        $list=collect($user->have_chat())->sortByDesc('pivot.updated_at')->values()->all();
         return response()->json($list);
 
     }
@@ -125,9 +125,19 @@ class ChatController extends Controller
     public function postMessage(Request $request){
       $message=  PrivateMessage::create($request->all());
       $user=User::find($this->userID);
+      $channel=ChatList::find($request->channel_id);
+      $channel->unread_id=$request->receiver_id;
+      $channel->save();
       event(new \App\Events\MessagePosted( $user,$message));
       return response()->json($message);
         
+    }
+    public function ReadChannel(){
+    $request=request();
+    $channel=ChatList::find($request->channel_id); 
+    if($channel->unread_id==$this->userID)
+     $channel->unread_id=0;
+      $channel->save();
     }
 
 

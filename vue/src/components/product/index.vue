@@ -132,7 +132,7 @@ import modal from'@/components/plugin/Modal.vue'
                  queryingInfo:{},
                 question_content:'',
                 selectProduct:{},
-                selectProduct:{},
+                
                 schools:[],
                 categories:[],
                 selectCategoryID:'',
@@ -146,7 +146,6 @@ import modal from'@/components/plugin/Modal.vue'
           chat_select(user){
               this.axios.post('/addChatUser',{chat_id:user.id})
               .then(({data})=>{
-                  console.log(data)
                 this.$router.push({name:'chat'})
             })
           },
@@ -156,11 +155,14 @@ import modal from'@/components/plugin/Modal.vue'
             this.fetchProducts({page:1,method_name:this.method_name,selectSchoolID:this.selectSchoolID,category_id:this.selectCategoryID})
           },
         sendQuestion(){
-            this.axios.post(`/question`,{product_id:this.selectProduct.id,account:this.$auth.getUser().account,content:this.question_content})
+            this.axios.post(`/question`,{product_id:this.selectProduct.id,account:this.$auth.getUser().account,content:this.question_content,seller_id:this.selectProduct.user_id})
             .then(({data})=>{
                 this.$swal(data) 
+                this.questions.unshift({account:this.$auth.getUser().account,
+content:this.question_content,
+created_at:"1 秒前"})
                 this.question_content=''
-            this.fetchQuestion(this.selectProduct)
+            // this.fetchQuestion(this.selectProduct)
         })
           },
           searchProduct(){

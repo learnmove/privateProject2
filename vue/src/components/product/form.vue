@@ -111,6 +111,7 @@
             this.$store.dispatch('products/editProduct',this.source)
             this.upload_source='/product/'+this.$route.params.pid
             this.method='put'
+            this.form.category_id='1'
         }
         
     }

@@ -31,7 +31,8 @@
                     {{item.item_total_qty}} 
                     </td>
                 <td>${{item.item_total_price}} </td>
-                <td>{{item.invoice.user.account}} </td>
+                <td>{{item.invoice.user.account}}        <button class="btn btn-danger" @click="chat_select(item.buyer_id)">聊聊</button>
+ </td>
               
             </tr>
             
@@ -76,6 +77,12 @@
         
     },
     methods:{
+          chat_select(buyer_id){
+              this.axios.post('/addChatUser',{chat_id:buyer_id})
+              .then(({data})=>{
+                this.$router.push({name:'chat'})
+            })
+          },
         statusConfirm(item,status){
 
             this.axios.put(`/items/${item.id}`,{status:status})

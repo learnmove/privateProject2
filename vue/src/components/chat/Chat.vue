@@ -55,11 +55,13 @@
                      </span>
                      <div class="chat-body clearfix" >
                         <div class="header_sec">
-                           <strong class="primary-font">{{user.name}}</strong> <strong class="pull-right">
-                           09:45AM</strong>
+                           <strong class="primary-font">{{user.name}}</strong>
+                            <span class="pull-right">
+                           {{user.pivot.updated_at }}</span>
                         </div>
                         <div class="contact_sec">
-                           <strong class="primary-font">(123) 123-456</strong> <span class="badge pull-right">3</span>
+                           <!--<strong class="primary-font">(123) 123-456</strong>-->
+                            <span class="badge pull-right" v-if="user.pivot.unread_id==$auth.getUserId()" >未讀</span>
                         </div>
                      </div>
                   </li>
@@ -138,8 +140,12 @@
 </template>
 <script>
 import {mapActions,mapState,mapGetters} from 'vuex'
+import store from '@/store/index'
 export default{
-  
+  beforeRouteEnter(to, from, next){
+        store.dispatch('chat/getChatlist')
+        .then(()=>next())
+  },
     data(){
         return{
             chatContentData:[],
@@ -149,7 +155,6 @@ export default{
         }
     },
     beforeMount(){
-        this.$store.dispatch('chat/getChatlist')
         
         
     // this.axios.get(`/chatcontent?chat_id=${}`)
@@ -157,37 +162,58 @@ export default{
     computed:{
        ...mapState('chat',['chat_data']),
     },
-    watch:{
-        chat_data:function(){
-        this.getChannel()
-        }
-    },
+    // watch:{
+    //     chat_data:function(){
+    //     this.getChannel()
+    //     }
+    // },
+  
     methods:{
-        getChannel(){
-                 let roomID=new Array()
-                 let that=this
-            this.chat_data.map((item)=>{
-                roomID.push(item.pivot.id)
-        })
-        roomID.forEach(function(id,index) {
-            let room_id=id
-        this.$echo.private(`chat_lists.${room_id}`)
-        .listen('.event',function(data){
-            // if(data.user.account!=that.$auth.getUser().account){
-                that.chatContentData.data.push(data.message)
-            // }
-                })  
-        }, this)
-        },
+        // getChannel(){
+        //          let roomID=new Array()
+        //          let that=this
+        //     this.chat_data.map((item)=>{
+        //         roomID.push(item.pivot.id)
+        // })
+        // roomID.forEach(function(id,index) {
+        //     let room_id=id
+        // this.$echo.private(`chat_lists.${room_id}`)
+        // .listen('.event',function(data){
+        //     if(data.user.account!=that.$auth.getUser().account){
+        //         that.chatContentData.data.push(data.message)
+        //     }
+        //         })  
+        // }, this)
+        // },
         setChatUser(user){
-        //    this.$echo.private(`chat_lists.${this.nowChatUser.pivot.id}`);
-
-            this.nowChatUser=user
-            this.axios.get(`/getChatContent?sender_id=${user.id}`)
-            .then(({data})=>{
+            if(Object.keys(this.nowChatUser).length>0){
+            this.$echo.leave(`chat_lists.${this.nowChatUser.pivot.id}`)
+           
+        }
+        
+            let that=this
+            if(user!= this.nowChatUser){
+                this.axios.get(`/getChatContent?sender_id=${user.id}`)
+                .then(({data})=>{
                 data.data=data.data.reverse()
                 this.chatContentData=data
             })
+            }
+           
+            this.nowChatUser=user
+            if(user.pivot.unread_id==this.$auth.getUserId()){
+              this.axios.get(`/ReadChannel?channel_id=${this.nowChatUser.pivot.id}`)
+             this.$store.dispatch('chat/setUnread',user)
+            }
+  
+          
+        
+           this.$echo.private(`chat_lists.${this.nowChatUser.pivot.id}`)
+           .listen('.event',function(data){
+               if(data.user.id!=that.$auth.getUserId()){
+                that.chatContentData.data.push(data.message)
+               }
+           })
     
 
         },
@@ -211,6 +237,10 @@ export default{
 }
 </script>
 <style scoped="true">
+.badge{
+      color: #ffffff;
+    background-color: #FA3E3E;
+}
  #custom-search-input {
   background: #e8e6e7 none repeat scroll 0 0;
   margin: 0;

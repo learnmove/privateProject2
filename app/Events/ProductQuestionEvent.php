@@ -8,9 +8,8 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use App\Entities\User;
-use App\Entities\PrivateMessage;
-class MessagePosted  implements ShouldBroadcast
+
+class ProductQuestionEvent
 {
     use InteractsWithSockets, SerializesModels;
 
@@ -19,13 +18,10 @@ class MessagePosted  implements ShouldBroadcast
      *
      * @return void
      */
-     public $user;
-     public $message;
-    public function __construct(User $user, PrivateMessage $message)
+     public $data;
+    public function __construct($data)
     {
-        //
-        $this->user=$user;
-        $this->message=$message;
+        $this->data=$data;
     }
 
     /**
@@ -33,16 +29,8 @@ class MessagePosted  implements ShouldBroadcast
      *
      * @return Channel|array
      */
- 
     public function broadcastOn()
     {
-        // return new PrivateChannel('channel-name');
-        return [new PrivateChannel('chat_lists.'.$this->message->channel_id),
-        new PrivateChannel('App.User.'.$this->message->receiver_id)];
-        
+        return new PrivateChannel('channel-name');
     }
-    public function broadcastAs()
-        {
-            return 'event';
-        }
 }
