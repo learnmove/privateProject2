@@ -27,6 +27,7 @@ const products={
          [types.edit_product](state,data){
              let product=data
                 state.edit_product=product
+                console.log(product)
                 state.edit_product.category_id=product.categories[0].id
 
                 // Object.defineProperty(
@@ -66,8 +67,6 @@ const products={
             .then(({data})=>{
                 commit(types.edit_product,data)
             })
-            
-
         },
         fetchMyProducts({commit},{page,method_name}){
             Vue.axios.get(`/mystore?page=${page}&method_name=${method_name}`)

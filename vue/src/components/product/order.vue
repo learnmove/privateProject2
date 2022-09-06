@@ -125,14 +125,17 @@ import Rate from '@/components/plugin/Rate.vue'
        ,
         beforeMount(){
        this.fetchData()
-        
+
     },
     methods:{
           chat_select(seller_id){
-              this.axios.post('/addChatUser',{chat_id:seller_id})
-              .then(({data})=>{
-                this.$router.push({name:'chat'})
-            })
+                this.$store.dispatch('chat/setUser', seller_id).then(()=>{
+                    this.axios.post('/addChatUser',{chat_id:seller_id})
+                    .then(({data})=>{
+                      this.$router.push({name:'chat'})
+                  })
+                  
+                })
           },
         filter_buy(method_name){
             this.method_name=method_name;
@@ -166,7 +169,10 @@ import Rate from '@/components/plugin/Rate.vue'
         fetchData(){
              this.axios.get(`invoice?page=${this.page}&method_name=${this.method_name}`)
         .then(({data})=>{
+
             this.orders=data.data;
+       console.log(this.orders)
+
             delete data.data
             this.order_info=data
         })

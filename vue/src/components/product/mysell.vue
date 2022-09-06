@@ -110,7 +110,7 @@ import modal from'@/components/plugin/Modal.vue'
             })
           },
           sendQuestion(){
-            this.axios.post(`/question`,{product_id:this.selectProduct.id,account:this.$auth.getUser().account,content:this.question_content})
+            this.axios.post(`/question`,{product_id:this.selectProduct.id,account:this.$auth.getUser().account,content:this.question_content,seller_id:this.selectProduct.user_id})
             .then(({data})=>{
                 this.$swal(data) 
                 this.question_content=''

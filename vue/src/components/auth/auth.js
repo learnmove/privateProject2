@@ -8,7 +8,7 @@
         this.setUser(user)
       },
       setToken(token){
-          localStorage.setItem('token',token)
+          localStorage.setItem('token','Bearer '+token)
           
       },
        setUser(user){

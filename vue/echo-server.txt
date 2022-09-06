@@ -1,0 +1,1 @@
+	// "authHost": "http://114.33.199.92:8080/laravel/ProductSale/public/",

@@ -94,6 +94,7 @@ class ChatController extends Controller
     }
     public function addChatUser(Request $request){
         $request['user_id']=$this->userID;
+        ;
         if( ChatList::where('user_id',$this->userID)->where('chat_id',$request->chat_id)->count()||ChatList::where('user_id',$request->chat_id)->where('chat_id',$this->userID)->count()){
         }else{
         ChatList::create(['user_id'=>$this->userID,'chat_id'=>$request->chat_id],$request->all());
@@ -139,6 +140,13 @@ class ChatController extends Controller
      $channel->unread_id=0;
       $channel->save();
     }
+    public function GetUnreadMessage(){
+        $have_message = 0;
+    if(\DB::table('chat_lists')->where('unread_id', $this->userID)->first()){
+        $have_message = 1;
+    }
 
+        return json_encode(['have_message'=>$have_message]);
+    }
 
 }

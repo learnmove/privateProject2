@@ -22,8 +22,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li><router-link v-if="isAuth" :to="{name:'cart'}"><a href="#"><span class="badge">{{getTotalQty}} </span>購物車</a></router-link></li> 
         <li><router-link  v-if="isAuth" :to="{name:'mysell'}"><a href="#"><span class="glyphicon glyphicon-log-in"></span> 我的商店</a></router-link></li>
-        <li  v-if="isAuth" style="color:white;"><a >{{$auth.getUser().name}}</a> </li>
-          
+          <li><router-link v-if="isAuth" :to="{name:'change_school'}"><a href="#">{{$auth.getUser().account}}</a></router-link></li> 
         <li><a href="#" v-if="isAuth" @click.prevent="logout">登出</a> </li>
         <li><router-link v-if="!isAuth" :to="{name:'signup'}"><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></router-link> </li>
         <li><router-link  v-if="!isAuth" :to="{name:'login'}"><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></router-link></li>

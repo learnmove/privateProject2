@@ -48,7 +48,7 @@
            <tr>
                 <td v-if="item.item_status[0].id==2 "><button class="btn btn-primary btn-xs" @click="statusConfirm(item,3)">收款確認</button> </td>
                 <td v-if="item.item_status[0].id==3 "><button class="btn btn-primary btn-xs" @click="statusConfirm(item,4)">出貨確認</button> </td>
-                <td v-if="item.item_status[0].id==9||item.item_status[0].id==12||item.item_status[0].id==11 "><button class="btn btn-primary btn-xs" >評價</button> </td>
+                <!--<td v-if="item.item_status[0].id==9||item.item_status[0].id==12||item.item_status[0].id==11 "><button class="btn btn-primary btn-xs" >評價</button> </td>-->
                 <td v-if="item.item_status[0].id==8&&item.item_status[0].pivot.requester_id!==$auth.getUserId()"><button class="btn btn-primary btn-xs" @click="statusConfirm(item,9)">同意取消交易</button> </td>
                 <td>{{item.item_status[0].content}} </td>
                 <td ><button class="btn btn-primary btn-xs" v-if="item.item_status[0].id==10" @click="statusConfirm(item,14)">同意退貨</button> </td>
@@ -78,10 +78,13 @@
     },
     methods:{
           chat_select(buyer_id){
-              this.axios.post('/addChatUser',{chat_id:buyer_id})
-              .then(({data})=>{
-                this.$router.push({name:'chat'})
-            })
+                this.$store.dispatch('chat/setUser', buyer_id).then(()=>{
+                    this.axios.post('/addChatUser',{chat_id:buyer_id})
+                    .then(({data})=>{
+                      this.$router.push({name:'chat'})
+                  })
+                  
+                })
           },
         statusConfirm(item,status){
 

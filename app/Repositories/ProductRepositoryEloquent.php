@@ -38,20 +38,20 @@ class ProductRepositoryEloquent extends BaseRepository implements ProductReposit
     public function withUserAndPage($per_page){
         $request=request();
         switch($request->method_name){
-
             case 'fetchProducts':
             if($request->category_id){
                $model=  $this->haveCategoryProduct($request->category_id,$per_page);
             }else{
              $model=$this->model->with('user','categories','school')->orderBy('created_at','desc')->where('qty','>','0')->where('visible','<>','0')->search($request->keyword)->paginate($per_page);
-
             }
 
             break;
+
             case 'selectSchoolID':
             if($request->category_id){
                $model=  $this->haveCategorySchoolProduct($request->selectSchoolID,$request->category_id,$per_page);
             }else{
+                
         $model=$this->model->with('user','categories','school')->orderBy('created_at','desc')
          ->where('qty','>','0')
          ->where('visible','<>','0')

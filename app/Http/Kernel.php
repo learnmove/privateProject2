@@ -14,8 +14,10 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = [
+        // \App\Http\Middleware\JWTAuthProcess::class,
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
         \App\Http\Middleware\Cors::class,
+        // \Tymon\JWTAuth\middleware\RefreshToken::class
     ];
 
     /**
@@ -54,6 +56,7 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'jwt.auth' => \Tymon\JWTAuth\middleware\GetUserFromToken::class,
-
+        
+        'jwt.refresh'=> \Tymon\JWTAuth\middleware\RefreshToken::class,
     ];
 }

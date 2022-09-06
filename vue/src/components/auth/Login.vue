@@ -47,7 +47,6 @@ import Vue from 'vue'
                 .then(({data})=>{
                     this.$auth.setAuth(data.token,data.user)
                     this.$router.push({name:'hello'})
-                   location.reload();
                     
             })
             

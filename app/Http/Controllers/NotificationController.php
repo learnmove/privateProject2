@@ -2,12 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Illuminate\Http\Request;
 use JWTAuth;
 use Auth;
 use App\Entities\User;
 class NotificationController extends Controller
 {
+    public function __construct(){
+     $this->middleware(['jwt.auth']);
+        
+          
+
+
+    }
     public function Getnotify(){
         $authuser=JWTAuth::parseToken()->authenticate();
         $user=User::find($authuser->id);

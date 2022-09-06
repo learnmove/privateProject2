@@ -54,4 +54,18 @@ class LoginController extends Controller
          return response()->json(compact('token','user'));
 
     }
+
+    public function changeSchool(Request $request){
+             try{
+      if(JWTAuth::getToken()){
+          $user_id=JWTAuth::parseToken()->authenticate()->id;
+          // protect may add verify school id, in_array(school_list_id,$reuqest->school_id)
+          \DB::table('users')->where('id',$user_id)->update(['school_id'=>$request->school_id]);
+        // }
+        }}catch(\Tymon\JWTAuth\Eceptions\JWTException $e){
+        return response()->json(['token_expired'], $e->getStatusCode());
+
+
+      }
+    }
 }

@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Hello from '@/components/Hello'
 import Login from '@/components/auth/Login'
 import Signup from '@/components/auth/Signup'
+import School from '@/components/auth/School'
 import product from './product'
 import chat from './chat'
 Vue.use(Router)
@@ -33,6 +34,13 @@ export default new Router({
       meta:{
         forVisitors:true
       }
+    },
+    {
+      path:'/change_school',
+      name:'change_school',
+      component: School,
+     meta:{forAuth:true}
+      
     },
     ...product
     ,    

@@ -23,15 +23,22 @@ class ProductController extends Controller
      public function __construct(ProductService $productService,ProductRepository $productRepository){
      $this->productRepository=$productRepository;
      $this->productService=$productService;
-     $this->middleware('jwt.auth')
+     $this->middleware(['jwt.auth'])
      ->except(
          'index',
          'show',
          'getSellerStore',
          'getSchoolList','getCategoryList');
-     if(JWTAuth::getToken()){
+
+       try{
+      if(JWTAuth::getToken()){
      $this->userID=JWTAuth::parseToken()->authenticate()->id;
-     }
+        // }
+        }}catch(\Tymon\JWTAuth\Eceptions\JWTException $e){
+        return response()->json(['token_expired'], $e->getStatusCode());
+
+
+      }
      }
     public function index()
     {

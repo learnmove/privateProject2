@@ -37,7 +37,7 @@
                 
                           <!--<li class="left clearfix">
                      <span class="chat-img pull-left">
-                     <img src="https://lh6.googleusercontent.com/-y-MY2satK-E/AAAAAAAAAAI/AAAAAAAAAJU/ER_hFddBheQ/photo.jpg" alt="User Avatar" class="img-circle">
+                     <img src="https://scontent.fkhh1-1.fna.fbcdn.net/v/t1.0-9/21558825_1618523034832897_306460236980159290_n.jpg?_nc_cat=0&oh=d97bf481fd34df8bee8fa7e1ec64e110&oe=5C110772" alt="User Avatar" class="img-circle">
                      </span>
                      <div class="chat-body clearfix">
                         <div class="header_sec">
@@ -51,11 +51,11 @@
                   </li>-->
                          <li @click="setChatUser(user)" v-for="user in chat_data" class="left clearfix">
                      <span class="chat-img pull-left">
-                     <img src="https://lh6.googleusercontent.com/-y-MY2satK-E/AAAAAAAAAAI/AAAAAAAAAJU/ER_hFddBheQ/photo.jpg" alt="User Avatar" class="img-circle">
+                     <img src="https://scontent.fkhh1-1.fna.fbcdn.net/v/t1.0-9/21558825_1618523034832897_306460236980159290_n.jpg?_nc_cat=0&oh=d97bf481fd34df8bee8fa7e1ec64e110&oe=5C110772" alt="User Avatar" class="img-circle">
                      </span>
                      <div class="chat-body clearfix" >
                         <div class="header_sec">
-                           <strong class="primary-font">{{user.name}}</strong>
+                           <strong class="primary-font">{{user.account}}</strong>
                             <span class="pull-right">
                            {{user.pivot.updated_at }}</span>
                         </div>
@@ -75,7 +75,7 @@
          <div class="col-sm-9 message_section">
 		 <div class="row">
 		 <div class="new_message_head">
-		 <div class="pull-left"><button><i class="fa fa-plus-square-o" aria-hidden="true"></i> New Message</button></div><div class="pull-right"><div class="dropdown">
+		 <div class="pull-left"><button><i class="fa fa-plus-square-o" aria-hidden="true"></i>{{nowChatUser.account}}</button></div><div class="pull-right"><div class="dropdown">
   <button class="dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     <i class="fa fa-cogs" aria-hidden="true"></i>  Setting
     <span class="caret"></span>
@@ -142,10 +142,21 @@
 import {mapActions,mapState,mapGetters} from 'vuex'
 import store from '@/store/index'
 export default{
-  beforeRouteEnter(to, from, next){
-        store.dispatch('chat/getChatlist')
-        .then(()=>next())
+    beforeRouteEnter(to, from, next){
+    store.dispatch('chat/getChatlist')
+        .then(()=>{
+          next()})
   },
+    mounted(){
+      setTimeout(()=>{
+          for(var user in this.chat_data){
+            if(this.chat_data[user].id == this.target_user_id){
+              this.setChatUser(this.chat_data[user])}
+            }
+        
+      }, 500)
+
+    },
     data(){
         return{
             chatContentData:[],
@@ -155,12 +166,10 @@ export default{
         }
     },
     beforeMount(){
-        
-        
     // this.axios.get(`/chatcontent?chat_id=${}`)
     },
     computed:{
-       ...mapState('chat',['chat_data']),
+       ...mapState('chat',['chat_data','target_user_id']),
     },
     // watch:{
     //     chat_data:function(){
@@ -423,6 +432,10 @@ export default{
   padding: 10px;
 }
 .chat_bottom {
+  align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
   float: left;
   margin-top: 13px;
   width: 100%;

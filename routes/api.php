@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-
+use \App\Entities\Product;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -12,10 +12,14 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
 Route::post('/register', 'Auth\RegisterController@create');
 Route::post('/login', 'Auth\LoginController@login');
+
+
 Route::resource('/product','ProductController');
+Route::resource('/product_school','ProductController');
+
+
 Route::get('/schoolist','ProductController@getSchoolList');
 Route::get('/categorylist','ProductController@getCategoryList');
 Route::resource('/items','InvoiceItemsController');
@@ -32,3 +36,16 @@ Route::post('/postMessage','ChatController@postMessage');
 Route::get('/Getnotify','NotificationController@Getnotify');
 Route::get('/MarkRead','NotificationController@MarkRead');
 Route::get('/ReadChannel','ChatController@ReadChannel');
+
+Route::post('/changeSchool','Auth\LoginController@changeSchool');
+
+Route::get('/getunread_message','ChatController@GetUnreadMessage');
+Route::get('/getemail',function(){
+	dd(\DB::table('users')->paginate(5));
+});
+Route::get('/a',function(){
+	dd(\DB::table('users')->paginate(5));
+});
+
+// auth
+Route::post('/auth/refresh',['uses'=>'Auth\AuthController@refresh','middleware'=>'jwt.auth']);

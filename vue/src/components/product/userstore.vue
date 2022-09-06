@@ -107,12 +107,17 @@ import modal from'@/components/plugin/Modal.vue'
       
       methods:{
                sendQuestion(){
-            this.axios.post(`/question`,{product_id:this.selectProduct.id,account:this.$auth.getUser().account,content:this.question_content})
+                   if(this.$auth.getUser()){
+  this.axios.post(`/question`,{product_id:this.selectProduct.id,account:this.$auth.getUser().account,content:this.question_content,seller_id:this.selectProduct.user_id})
             .then(({data})=>{
                 this.$swal(data) 
                 this.question_content=''
             this.fetchQuestion(this.selectProduct)
         })
+                   }
+          else{
+              this.$swal('請先登錄')
+          }
           },
       
         //   ...mapActions('products',['fetchProducts'],this.page)

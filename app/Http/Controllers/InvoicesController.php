@@ -63,6 +63,11 @@ class InvoicesController extends Controller
     public function store(Request $request)
     {
         $request['user_id']=$this->userID;
+        $user = \DB::table('users')->where('id', $this->userID)->first();
+          \Mail::raw('以購買', function ($message) use ($user){
+        $message->from('dontsaygoodbyebecause520@gmail.com','ga');
+        $message->to($user->email, 'test')->subject('訂單成立通知');
+    });
         $invoice=$this->invoiceRepository->createInvoice($request->except('items'));
         $this->invoiceItemRepository->createItem($invoice,$request['items'],$this->userID);
              return response()->json(

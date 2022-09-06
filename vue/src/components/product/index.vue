@@ -55,7 +55,7 @@
      <div class="caption">
         <h3>{{product.name}}</h3>
         <p>{{product.description}}</p>
-        <span class="text-waring">${{product.price}} </span>
+        <span class="text-waring" style="font-size:1rem;color: rgb(238, 77, 45);">${{product.price}} </span>
         <div class="">數量{{product.qty}} </div>
         <div class="">賣家：<router-link :to="{name:'userstore',params:{'user_account':product.user.account}}">{{product.user.account}}</router-link> </div>
 
@@ -67,9 +67,9 @@
           </div>
    
             <div class="">
-        <a href="#" @click.prevent="purchase(product)" class="btn btn-default" role="button">放進購物車</a></p>
-        <button class="btn btn-primary" @click="showinput(product)">詢問/商品留言</button>
-        <button class="btn btn-danger" @click="chat_select(product.user)">聊聊</button>
+        <a href="#" @click.prevent="purchase(product)" class="btn btn-default" role="button" v-if="product.user_id!=$auth.getUserId()">放進購物車</a></p>
+        <button class="btn btn-primary" @click="showinput(product)" >詢問/商品留言</button>
+        <button class="btn btn-danger" @click="chat_select(product.user)" v-if="product.user_id!=$auth.getUserId()">聊聊</button>
             </div>
             
       </div>
@@ -137,17 +137,30 @@ import modal from'@/components/plugin/Modal.vue'
                 categories:[],
                 selectCategoryID:'',
                 selectSchoolID:'',
-                keyword:''
-               
+                keyword:'',
             }
         },
       
       methods:{
+        isLogging(){
+          return this.$auth.getUser()
+        },
           chat_select(user){
-              this.axios.post('/addChatUser',{chat_id:user.id})
-              .then(({data})=>{
-                this.$router.push({name:'chat'})
-            })
+
+            if(this.$auth.getUser()){
+                this.$store.dispatch('chat/setUser', user.id).then(()=>{
+                  
+                 this.axios.post('/addChatUser',{chat_id:user.id})
+                    .then(({data})=>{
+                                        console.log(user.id)
+                      this.$router.push({name:'chat'})
+                  })
+                })
+
+            }else{
+              this.$swal('請先登陸')
+            }
+            
           },
           clearCategory(){
             this.selectCategoryID=''
@@ -155,7 +168,8 @@ import modal from'@/components/plugin/Modal.vue'
             this.fetchProducts({page:1,method_name:this.method_name,selectSchoolID:this.selectSchoolID,category_id:this.selectCategoryID})
           },
         sendQuestion(){
-            this.axios.post(`/question`,{product_id:this.selectProduct.id,account:this.$auth.getUser().account,content:this.question_content,seller_id:this.selectProduct.user_id})
+          if(this.$auth.getUser()){
+                 this.axios.post(`/question`,{product_id:this.selectProduct.id,account:this.$auth.getUser().account,content:this.question_content,seller_id:this.selectProduct.user_id})
             .then(({data})=>{
                 this.$swal(data) 
                 this.questions.unshift({account:this.$auth.getUser().account,
@@ -164,6 +178,9 @@ created_at:"1 秒前"})
                 this.question_content=''
             // this.fetchQuestion(this.selectProduct)
         })
+          }else{
+            this.$swal('請先登入')
+          }
           },
           searchProduct(){
             this.fetchProducts({page:1,method_name:this.method_name,selectSchoolID:this.selectSchoolID,category_id:this.selectCategoryID,keyword:this.keyword})
@@ -242,6 +259,7 @@ created_at:"1 秒前"})
     that.$swal('刪了')});
         },
         purchase(product){
+          console.log(product)
             if(this.$auth.isAuthenticate()){
                 if(product.purchaseQty){
                     this.$store.dispatch('cart/addItem',product)

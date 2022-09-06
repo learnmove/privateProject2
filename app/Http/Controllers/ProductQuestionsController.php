@@ -54,7 +54,10 @@ class ProductQuestionsController extends Controller
     {
         $this->repository->create($request->except('seller_id'));
         $seller=User::find($request->seller_id);
+        if($this->user->id!=$request->seller_id){
        $seller->notify(new \App\Notifications\ProductQuestion($request->product_id,$request->account,$request->content));
+            
+        }
         return response()->json('留言成功');
     }
 

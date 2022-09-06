@@ -6,10 +6,11 @@
 
     </div>
     <div>
-  <router-link @click.native="haveChat=''" :to="{name:'chat'}" tag="button" class="chat btn btn-chat"><i class="fa fa-comments-o" aria-hidden="true"></i>
-聊聊<div class="badge" v-if="haveChat!=0">{{haveChat}}</div></router-link>
+      
+  <router-link v-if="$auth.getUser()" @click.native="haveChat=''" :to="{name:'chat'}" tag="button" class="chat btn btn-chat"><i class="fa fa-comments-o" aria-hidden="true"></i>
+聊聊<div class="badge" v-if="haveChat!=0">O</div></router-link>
     </div>
-     <div class="dropup">
+     <div class="dropup" v-if="$auth.getUser()">
   <button @click="MarkRead" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
     <span class="glyphicon glyphicon-globe">消息</span>
   <span class="badge " v-if="dispalyBadge">{{UnReadMessageCount}} </span>
@@ -46,14 +47,15 @@ export default {
   beforeMount(){
     if(this.$auth.getUser()){
       this.Getnotify()
+      this.GetUnreadMessage()
     }
     let that=this
     this.$echo.private('App.User.' + this.$auth.getUserId())
     .listen('.event',function(data){
+      console.log(data)
             that.haveChat++
     })
     .notification((message) => {
-      console.log(message)
         this.messages.unshift(message)
         this.UnReadMessageCount++
         this.dispalyBadge=true
@@ -62,8 +64,9 @@ export default {
   methods:{
     Getnotify(){
       this.axios.get('/Getnotify')
-      .then(({data})=>{
-        this.messages=data 
+      .then((res)=>{
+        console.log(res.headers)
+        this.messages=res.data 
         this.UnReadMessageCount=this.messages.filter(item=>{return item.read_at===null}).length
 
         if(this.UnReadMessageCount>0){
@@ -79,6 +82,13 @@ export default {
        
       }
     
+    },
+    GetUnreadMessage(){
+        this.axios.get('/getunread_message').then((res)=>{
+          console.log(res.data)
+          this.haveChat = res.data.have_message;
+        })
+
     }
   }
 }

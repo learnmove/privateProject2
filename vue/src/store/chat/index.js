@@ -1,7 +1,8 @@
 import Vue from 'vue'
 const types={
     getChatlist:'get_chat_list',
-    setUnread:'setUnread'
+    setUnread:'setUnread',
+    setUser: 'set_user'
 }
 const chat={
     namespaced: true,
@@ -9,7 +10,8 @@ const chat={
         chat_data:{
             chat_user:[]
         },
-        chat_message:[]
+        chat_message:[],
+        target_user_id:''
     },
     mutations:{
         [types.getChatlist](state,data){
@@ -26,6 +28,9 @@ const chat={
          state.chat_data[index].pivot,
         'unread_id',
         {value:0})
+        },
+        [types.setUser](state,user_id){
+                state.target_user_id=user_id
         }
     },
     actions:{
@@ -34,6 +39,9 @@ const chat={
     .then(({data})=>{
         commit(types.getChatlist,data)
     })
+        },
+        setUser({commit},user_id){
+            commit(types.setUser,user_id)
         },
         setUnread({commit},user){
             commit(types.setUnread,user)
