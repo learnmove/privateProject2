@@ -30,6 +30,7 @@
         methods:{
              changePage(n){
             this.page=n
+            this.$router.push({ path: 'product', query: { page: n }})
             this.$emit('fetchProducts',{page:n,method_name:this.method_name,selectSchoolID:this.selectSchoolID,category_id:this.selectCategoryID,keyword:this.keyword})
             if(this.last_page<10){
                 this.page_start=1,

@@ -46,8 +46,8 @@
                             
                         </div>
                         <div class="col-sm-10">
-                            <input v-model="form.qty" type="text" name="" id="" class="form-control">
-                        <span :class="{'text-danger':errors.qty}">{{errors.qty}} </span>
+                            <input v-model="form.quantity" type="text" name="" id="" class="form-control">
+                        <span :class="{'text-danger':errors.quantity}">{{errors.quantity}} </span>
                             
                         </div>
                     </div>
@@ -92,7 +92,7 @@
                 description:'',
                 price:'',
                 img:'',
-                qty:'1',
+                quantity:'1',
                 category_id:'1'
                 
             },

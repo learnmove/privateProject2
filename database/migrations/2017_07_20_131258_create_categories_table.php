@@ -32,6 +32,7 @@ class CreateCategoriesTable extends Migration
             ['name'=>'租屋'],
             ['name'=>'票券'],
             ['name'=>'作業'],
+            ['name'=>'工作'],
             ]);
     }
 

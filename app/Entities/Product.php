@@ -3,16 +3,13 @@
 namespace App\Entities;
 
 use Illuminate\Database\Eloquent\Model;
-use Prettus\Repository\Contracts\Transformable;
-use Prettus\Repository\Traits\TransformableTrait;
 use App\Scopes\ProductScope;
 
-class Product extends Model implements Transformable
+class Product extends Model
 {
-    use TransformableTrait;
-     protected $table="products";
-     public $timestamps=true;
-    protected $fillable = ['school_id','visible','qty','name','price','description','user_id','img'];
+    protected $table="products";
+    public $timestamps=true;
+    protected $fillable = ['school_id','visible','quantity','name','price','description','user_id','img'];
     //   protected static function boot()
     // {
     //     parent::boot();

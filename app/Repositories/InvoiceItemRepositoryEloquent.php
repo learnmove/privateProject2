@@ -36,12 +36,13 @@ class InvoiceItemRepositoryEloquent extends BaseRepository implements InvoiceIte
         $this->pushCriteria(app(RequestCriteria::class));
     }
     public function createItem($invoice,$items, $userID){
-  $user=JWTAuth::parseToken()->authenticate();
+        
+        $user=JWTAuth::parseToken()->authenticate();
         $Invoiceitems=[];
         foreach($items as $item){
             $item['product_id']=$item['id'];
             $item['item_total_price']=$item['itemTotal'];
-            $item['item_total_qty']=$item['qty'];
+            $item['item_total_qty']=$item['quantity'];
             $product=$this->updateProductQty($item);
             $item['seller_id']=$product->user->id;
             $item['buyer_id']=$userID;
@@ -59,8 +60,8 @@ class InvoiceItemRepositoryEloquent extends BaseRepository implements InvoiceIte
     public function updateProductQty($item){
         
         $product=Product::with('user')->find($item['id']);
-        $restQty=$product->qty-$item['qty'];
-        $product->update(['qty'=>$restQty]);
+        $restQty=$product->qty-$item['quantity'];
+        $product->update(['quantity'=>$restQty]);
         return $product;
     }
     

@@ -51,7 +51,7 @@
                   </li>-->
                          <li @click="setChatUser(user)" v-for="user in chat_data" class="left clearfix">
                      <span class="chat-img pull-left">
-                     <img src="https://scontent.fkhh1-1.fna.fbcdn.net/v/t1.0-9/21558825_1618523034832897_306460236980159290_n.jpg?_nc_cat=0&oh=d97bf481fd34df8bee8fa7e1ec64e110&oe=5C110772" alt="User Avatar" class="img-circle">
+                     <img v-bind:src="user.avatar" alt="User Avatar" class="img-circle">
                      </span>
                      <div class="chat-body clearfix" >
                         <div class="header_sec">
@@ -91,12 +91,18 @@
 		 <div class="chat_area">
 		 <ul class="list-unstyled">
 		 <li class="left clearfix" :class="{'admin_chat':chat_content.sender_id==$auth.getUserId()}" v-for="chat_content in chatContentData.data">
+
+     
                      <span class="chat-img1 " :class="{'pull-left':chat_content.sender_id!=$auth.getUserId(),'pull-right':chat_content.sender_id==$auth.getUserId()}">
-                     <img :src="SenderIsMe==true?nowChatUser.avatar:$auth.getUser().avatar" alt="User Avatar" class="img-circle">
+                      <div style="" >{{chat_content.sender_id==$auth.getUserId()?$auth.getUser().name:nowChatUser.name}}</div>
+                                           <img :src="chat_content.sender_id==$auth.getUserId()?$auth.getUser().avatar:nowChatUser.avatar" alt="User Avatar" class="img-circle">
+
                      </span>
-                     <div class="chat-body1 clearfix">
-                        <p :class="{'pull-left':chat_content.sender_id!=$auth.getUserId(),'pull-right':chat_content.sender_id==$auth.getUserId()}">{{chat_content.message}}</p>
-						<div class="chat_time " :class="{'pull-left':!chat_content.sender_id==$auth.getUserId(),'pull-right':chat_content.sender_id==$auth.getUserId()}">{{chat_content.created_at}}</div>
+                     <div class="chat-body1 clearfix "><div>
+                        <p v-html="chat_content.message" :class="{'pull-left':!chat_content.sender_id==$auth.getUserId(),'pull-right':chat_content.sender_id==$auth.getUserId()}" >{{}} <br />rr \n</p>
+            <div class="chat_time " :class="{'pull-left':!chat_content.sender_id==$auth.getUserId(),'pull-right':chat_content.sender_id==$auth.getUserId()}">{{chat_content.created_at}}</div>
+                       
+                     </div>
                      </div>
                   </li>
 				  
@@ -204,11 +210,13 @@ export default{
             if(user!= this.nowChatUser){
                 this.axios.get(`/getChatContent?sender_id=${user.id}`)
                 .then(({data})=>{
+                console.log(data)
+
                 data.data=data.data.reverse()
                 this.chatContentData=data
             })
             }
-           
+           console.log(user)
             this.nowChatUser=user
             if(user.pivot.unread_id==this.$auth.getUserId()){
               this.axios.get(`/ReadChannel?channel_id=${this.nowChatUser.pivot.id}`)
@@ -411,6 +419,8 @@ export default{
 }
 .chat-body1 p {
   background: #fbf9fa none repeat scroll 0 0;
+  /*background: blue;*/
+  border-radius: 10px;
   padding: 10px;
 }
 .chat_area .admin_chat .chat-body1 {
@@ -452,4 +462,5 @@ export default{
   color: #fff;
   cursor:pointer;
 }
+
 </style>

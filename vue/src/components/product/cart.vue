@@ -1,6 +1,6 @@
 <template>
-  <div class="container">
-      <table class="table table-striped">
+  <div class="container checkout">
+      <table class="table table-striped checkout">
         <thead>
 
             <tr>
@@ -18,7 +18,7 @@
                 <td>${{item.price}} </td>
                 <td>
                     <button class="btn btn-waring" @click="inc(item)">+</button>
-                    {{item.qty}} 
+                    {{item.quantity}} 
                     <button class="btn btn-danger" @click="dec(item)">-</button>
                     </td>
                 <td>${{item.itemTotal}} </td>
@@ -29,11 +29,12 @@
                 <td colspan="">${{getTotalPrice}} </td>
                 <td colspan="">總數量 </td>
                 <td colspan="">{{getTotalQty}} </td>
-                
+                <td colspan=""><button class="btn btn-primary pull-right" @click.prevent="checkout">結帳</button> </td>
+
             </tr>
         </tbody>
   </table>
-        <button class="btn btn-primary pull-right" @click.prevent="checkout">結帳</button>
+        
   
   </div>
 </template>
@@ -88,3 +89,9 @@ import {mapState,mapGetters} from 'vuex'
         }
     }
 </script>
+<style>
+    .checkout{
+        margin-bottom: 50px;
+    }
+
+</style>

@@ -56,6 +56,9 @@ const products={
                 commit(types.set_products,data)
             })
         },
+        
+        
+        
         deleteProduct({commit},product){
                Vue.axios.delete(`/product/${product.id}`)
             .then(({data})=>{

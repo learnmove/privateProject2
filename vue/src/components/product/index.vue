@@ -47,6 +47,9 @@
         <div class="school_name">
         {{product.school.name}}
         </div>
+        <div class="updated_at">
+        {{product.updated_at}}
+        </div>
       <div v-if="product.user_id==$auth.getUser().id" class="text-right text-danger">
           <button @click="deleteProduct(product)" class="btn btn-danger">x</button>
           <router-link tag="button" class="btn btn-primary" :to="{name:'product_edit',params:{pid:product.id}}">俢改</router-link>
@@ -56,13 +59,13 @@
         <h3>{{product.name}}</h3>
         <p>{{product.description}}</p>
         <span class="text-waring" style="font-size:1rem;color: rgb(238, 77, 45);">${{product.price}} </span>
-        <div class="">數量{{product.qty}} </div>
+        <div class="">數量{{product.quantity}} </div>
         <div class="">賣家：<router-link :to="{name:'userstore',params:{'user_account':product.user.account}}">{{product.user.account}}</router-link> </div>
 
 
  <div v-if="product.user_id!=$auth.getUser().id" class="">
          選擇數量<select v-model.number="product.purchaseQty" value="1" >
-                <option :value=n v-for="n in product.qty">{{n}}</option>
+                <option :value=n v-for="n in product.quantity">{{n}}</option>
             </select>
           </div>
    
@@ -78,7 +81,6 @@
   
   <div class="row">
        <!--<pagination :method_name="method_name" @fetchProducts="fetchProducts"  :last_page="products.last_page"></pagination>-->
-       <pagination :method_name="method_name" @fetchProducts="fetchProducts"  :last_page="products.last_page" :selectSchoolID="selectSchoolID"></pagination>
        
       <modal title="Modal Title" :show="OpenModal" @cancel="cancel">
           <div class="form-group"><input type="text" name="" id="" v-model="question_content" class="form-control"></div>
@@ -106,6 +108,7 @@
 </modal>
 
   </div>
+       <pagination :method_name="method_name" @fetchProducts="fetchProducts"  :last_page="products.last_page" :selectSchoolID="selectSchoolID"></pagination>
 
 </div>
 </template>
@@ -167,7 +170,7 @@ import modal from'@/components/plugin/Modal.vue'
             this.queryingInfo.category_name=''
             this.fetchProducts({page:1,method_name:this.method_name,selectSchoolID:this.selectSchoolID,category_id:this.selectCategoryID})
           },
-        sendQuestion(){
+          sendQuestion(){
           if(this.$auth.getUser()){
                  this.axios.post(`/question`,{product_id:this.selectProduct.id,account:this.$auth.getUser().account,content:this.question_content,seller_id:this.selectProduct.user_id})
             .then(({data})=>{
@@ -194,8 +197,8 @@ created_at:"1 秒前"})
             this.fetchProducts({page:1,method_name:'fetchProducts',selectSchoolID:''})
           },
           selectCategory(id,category_name){
-              this.selectCategoryID=id
-              this.queryingInfo.category_name=category_name
+            this.selectCategoryID=id
+            this.queryingInfo.category_name=category_name
             this.fetchProducts({page:1,method_name:this.method_name,selectSchoolID:this.selectSchoolID,category_id:this.selectCategoryID})
           },
           selectSchool(id,school_name){
@@ -203,6 +206,8 @@ created_at:"1 秒前"})
             this.selectSchoolID=id
             this.queryingInfo.school_name=school_name
             this.method_name="selectSchoolID"
+
+            this.$router.push({ path: 'product', query: { selectSchoolID: id }})
             this.fetchProducts({page:1,method_name:this.method_name,selectSchoolID:this.selectSchoolID,category_id:this.selectCategoryID})
           },
           fetchSchoolList(){
@@ -242,7 +247,10 @@ created_at:"1 秒前"})
           }
           ,
         //   ...mapActions('products',['fetchProducts'],this.page)
-        fetchProducts(pagination={page:1,method_name:'fetchProducts',selectSchoolID:'',category_id:'',keyword:''}){
+        fetchProducts(pagination={page:1,method_name:'fetchProducts',selectSchoolID:'',category_id:'',keyword:''}){            
+
+          this.$router.push({path: 'product', query: {...pagination}});
+
             return this.$store.dispatch('products/fetchProducts',pagination)},
         deleteProduct(product){
             const that=this

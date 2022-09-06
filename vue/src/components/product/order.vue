@@ -44,7 +44,7 @@
             <tr>
               
                 <td>
-                    {{item.item_total_qty}} 
+                    {{item.quantity}} 
                     </td>
                 <td>${{item.item_total_price}} </td>
                 <td>

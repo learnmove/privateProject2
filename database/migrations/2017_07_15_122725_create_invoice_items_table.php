@@ -20,7 +20,7 @@ class CreateInvoiceItemsTable extends Migration
             $table->integer('buyer_id');
             $table->integer('seller_id');
             $table->integer('item_total_price');
-            $table->integer('item_total_qty');
+            $table->integer('quantity');
             $table->timestamps();
 		});
 	}

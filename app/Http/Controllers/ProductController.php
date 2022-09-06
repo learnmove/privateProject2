@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Repositories\ProductRepository;
 use Auth;
 use JWTAuth;
+use App\Entities\Product;
 use App\Services\ProductService;
 use App\Http\Requests\ProductRequest;
 use DB;
@@ -65,11 +66,18 @@ class ProductController extends Controller
      */
     public function store(ProductRequest $request)
     {   
+
+        $product = $request->all();
         $path=$this->productService->storeImg($request->img);
         if($path){
-        $request['img']=$path;
+            $product['img']=$path;
         }
-        $product=$this->productRepository->createProduct($request);
+
+        $product['user_id'] = JWTAuth::parseToken()->authenticate()->id;
+        $product['school_id'] = JWTAuth::parseToken()->authenticate()->school_id;
+        $product=  Product::create($product);
+        $product->categories()->attach($request->category_id,['school_id' => $product['school_id']]);
+
         return response()->json(['上傳成功']);
     }
 
@@ -139,8 +147,11 @@ class ProductController extends Controller
      return response()->json($schools );
     }
      public function getCategoryList(){
-       $categories= DB::table('categories')->get();
-     return response()->json($categories );
+
+        $categories= DB::table('categories')->get();
+
+        return response()->json($categories);
+
     }
 
 }

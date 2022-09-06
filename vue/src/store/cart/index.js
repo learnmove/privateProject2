@@ -20,15 +20,15 @@ const cart={
         })
             if(found){
                 let index=state.items.indexOf(found)
-                state.items[index].qty=item.purchaseQty
+                state.items[index].quantity=item.purchaseQty
                 
             }else{
                 state.items.push(
                     {
                     id:item.id,
                     name:item.name,
-                    qty:item.purchaseQty,
-                    restQty:item.qty,
+                    quantity:item.purchaseQty,
+                    restQty:item.quantity,
                     price:item.price,
                     itemTotal:item.purchaseQty*item.price
                 }
@@ -44,17 +44,17 @@ const cart={
         [types.incrementQty](state,item){
             let index=state.items.indexOf(item)
 
-            if(state.items[index].qty+1<=state.items[index].restQty){
-               state.items[index].qty++ 
-               state.items[index].itemTotal= state.items[index].qty*state.items[index].price
+            if(state.items[index].quantity+1<=state.items[index].restQty){
+               state.items[index].quantity++ 
+               state.items[index].itemTotal= state.items[index].quantity*state.items[index].price
             }
         },
         [types.decrementQty](state,item){
             let index=state.items.indexOf(item)
             
-            if(state.items[index].qty-1>=0){
-               state.items[index].qty--
-               state.items[index].itemTotal= state.items[index].qty*state.items[index].price
+            if(state.items[index].quantity-1>=0){
+               state.items[index].quantity--
+               state.items[index].itemTotal= state.items[index].quantity*state.items[index].price
             }
         },
         [types.clearnItems](state){
@@ -83,11 +83,11 @@ const cart={
         getTotalQty(state,getters){
 
                if(state.items.length>0){
-                   let Qty=state.items.reduce((total,item)=>{
-              return  total+item.qty
+                   let quantity=state.items.reduce((total,item)=>{
+              return  total+item.quantity
                 
             },0)
-           return Qty
+           return quantity
                }else{
                    return 0
                }

@@ -20,20 +20,23 @@ $factory->define(App\Entities\User::class, function (Faker\Generator $faker) {
         'account'=>$faker->username,
         'email' => $faker->unique()->safeEmail,
         'avatar'=>$faker->imageUrl(50,50),
-        'school_id'=>$faker->numberBetween(1,370),
+        'school_id'=> mt_rand(1,370),
         'password' => $password ?: $password = bcrypt('secret'),
         'remember_token' => str_random(10),
     ];
 });
+
+
 $factory->define(App\Entities\Product::class,function(Faker\Generator $faker){
     return[
         'user_id'=>mt_rand(1,50),
         'school_id'=>mt_rand(1,370),
+        'category_id'=>mt_rand(1,13),
         'name'=>$faker->word,
-        'price'=>$faker->numberBetween(100,500),
+        'price'=> mt_rand(100,500),
         'description'=>$faker->paragraph,
         'img'=>$faker->imageUrl($width=640,$height=640),
-        'qty'=>$faker->numberBetween(0,3)
+        'quantity'=> mt_rand(0,3)
     ];
 });
 $factory->define(App\Entities\Invoice::class,function(Faker\Generator $faker){
@@ -47,7 +50,7 @@ $factory->define(App\Entities\InvoiceItem::class,function(Faker\Generator $faker
   return [
      'product_id'=>mt_rand(1,50),
      'item_total_price'=>mt_rand(100,500),
-     'item_total_qty'=>mt_rand(1,2)
+     'quantity'=>mt_rand(1,2)
   ]  ;
 });
 $factory->define(App\Entities\ProductQuestion::class,function(Faker\Generator $faker){

@@ -124,7 +124,9 @@ class ChatController extends Controller
         return response()->json($messages);
     }
     public function postMessage(Request $request){
-      $message=  PrivateMessage::create($request->all());
+      $message = $request->all();
+      $message['message'] = nl2br(htmlspecialchars($request->message));
+      $message=  PrivateMessage::create($message);
       $user=User::find($this->userID);
       $channel=ChatList::find($request->channel_id);
       $channel->unread_id=$request->receiver_id;
