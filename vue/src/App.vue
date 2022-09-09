@@ -1,8 +1,42 @@
 <template>
   <div id="app">
     <div class="container">
-    <nav-bar></nav-bar>
-    <router-view></router-view>
+    <!-- nav -->
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span> 
+          </button>
+          <a class="navbar-brand" ><router-link  to="/product"><a @click="a()" href="#"><span class="glyphicon glyphicon-user"></span> 校園拍賣</a></router-link></a>
+          
+        </div>
+       
+        <div class="collapse navbar-collapse" id="myNavbar">
+          <ul class="nav navbar-nav">
+            <li class="active"><router-link :to="{name:'product'}"><a href="#">商品</a></router-link></li>
+            <li><router-link v-if="isAuth" :to="{name:'product_create'}"><a href="#">刊登商品</a></router-link></li>
+            <li><router-link v-if="isAuth" :to="{name:'order'}"><a href="#">購買清單</a></router-link></li> 
+            <li><router-link v-if="isAuth" :to="{name:'sellout'}"><a href="#">售出清單</a></router-link></li> 
+            
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><router-link v-if="isAuth" :to="{name:'cart'}"><a href="#"><span class="badge">{{getTotalQty}} </span>購物車</a></router-link></li> 
+            <li><router-link  v-if="isAuth" :to="{name:'mysell'}"><a href="#"><span class="glyphicon glyphicon-log-in"></span> 我的商店</a></router-link></li>
+              <li><router-link v-if="isAuth" :to="{name:'change_school'}"><img style="width:35px; height:35px" v-bind:src="$auth.getUser().avatar" alt="" class="img-circle"><a href="#">{{$auth.getUser().account}}</a></router-link></li> 
+            <li><a href="#" v-if="isAuth" @click.prevent="logout">登出</a> </li>
+            <li><router-link v-if="!isAuth" :to="{name:'signup'}"><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></router-link> </li>
+            <li><router-link  v-if="!isAuth" :to="{name:'login'}"><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></router-link></li>
+            
+            
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- nav -->
+    <router-view ></router-view>
 
     </div>
     <div>
@@ -29,20 +63,28 @@
 </template>
 
 <script>
-import Navbar from'@/components/Navbar'
+import {mapGetters} from 'vuex'
+
 export default {
   name: 'app',
   components:{
-    'nav-bar':Navbar
   },
   data(){
     return {
       messages:[],
       haveChat:0,
-
+      refresh:0,
       UnReadMessageCount:0,
-      dispalyBadge:false
+      dispalyBadge:false,
+      isAuth: this.$auth.isAuthenticate()
+
     }
+  },
+  watch:{
+      '$route':function(){
+          this.isAuth=this.$auth.isAuthenticate()
+      },
+    
   },
   beforeMount(){
     if(this.$auth.getUser()){
@@ -62,6 +104,9 @@ export default {
     });
   },
   methods:{
+    a(){
+      this.refresh++;
+    },
     Getnotify(){
       this.axios.get('/Getnotify')
       .then((res)=>{
@@ -89,8 +134,22 @@ export default {
           this.haveChat = res.data.have_message;
         })
 
+    },
+    logout(){
+        this.$auth.destroyLogin()
+        this.$swal('已登出')
+         this.isAuth=false
+       
     }
-  }
+  },
+        computed:{
+        //    ...mapGetters('cart',['getTotalQty'])
+//         getTotalQty () {
+//             return this.$store.getters.cart.getTotalQty()
+//   }
+           ...mapGetters('cart',['getTotalQty'])
+
+        }
 }
 </script>
 

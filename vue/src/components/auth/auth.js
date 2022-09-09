@@ -14,7 +14,13 @@
        setUser(user){
           localStorage.setItem('user',JSON.stringify(user))
           
-      }, 
+      },
+       setSchoolId(id){
+          var user = JSON.parse(localStorage.getItem('user'))
+          user.school_id = id;
+          localStorage.setItem('user',JSON.stringify(user))
+          
+      },
       getToken(){
        return localStorage.getItem('token')
       },

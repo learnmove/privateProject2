@@ -3,21 +3,22 @@
 
   <div class="row">
       <div class="panel panel-panel-info">
-          <div class="panel-heading">   
-    <table>
-  
-        <tbody>
-            <tr>
-               <td> <i class="fa fa-shopping-bag" aria-hidden="true"></i>商品：<span>{{store_info.countProduct}}</span></td> 
-               <td><i class="fa fa-user-circle" aria-hidden="true"></i>加入時間：<span>{{store_info.user?store_info.user.created_at:''}}</span> </td>
-               <td><i class="fa fa-star-o" aria-hidden="true">評價</i> <router-link :to="{name:'user_ratting',params:{user_account:this.$route.params.user_account}}"><span>{{store_info.countRateOfUser}}個評價</span></router-link></td>
-
-
-            </tr>
-            
-        </tbody>
-    </table>
-
+          <div class="panel-heading">
+            <tbody>
+              <tr>
+                <td><i class="fa fa-shopping-bag" aria-hidden="true"></i>商品：<span>{{store_info.countProduct}}</span></td>
+                <td><i class="fa fa-user-circle" aria-hidden="true"></i>加入時間：<span>{{store_info.user?store_info.user.created_at:''}}</span> </td>
+                <td><i class="fa fa-star-o" aria-hidden="true">評價</i> <router-link :to="{name:'user_ratting',params:{user_account:this.$route.params.user_account}}"><span>{{store_info.countRateOfUser}}個評價</span></router-link></td>
+              </tr>
+            </tbody>
+                
+               
+               
+            <div>
+            </br>
+              如果是買全新商品，通常就是看看商品價格、賣場評價就好。但如果是買二手商品，要注意的 ... 也是在網頁版賣家中心，我才發現原來可以填寫賣場介紹。如果是買全新商品，通常就是看看商品價格、賣場評價就好。但如果是買二手商品，要注意的 ... 也是在網頁版賣家中心，我才發現原來可以填寫賣場介紹。
+                           如果是買全新商品，通常就是看看商品價格、賣場評價就好。但如果是買二手商品，要注意的 ... 也是在網頁版賣家中心，我才發現原來可以填寫賣場介紹。如果是買全新商品，通常就是看看商品價格、賣場評價就好。但如果是買二手商品，要注意的 ... 也是在網頁版賣家中心，我才發現原來可以填寫賣場介紹。
+            </div>
           </div>
       </div>
   </div>

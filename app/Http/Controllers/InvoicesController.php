@@ -12,7 +12,10 @@ use App\Http\Requests\InvoiceUpdateRequest;
 use App\Repositories\InvoiceRepository;
 use App\Validators\InvoiceValidator;
 use App\Repositories\InvoiceItemRepository;
+use App\Entities\InvoiceItem;
+
 use JWTAuth;
+use App\Entities\Product;
 
 class InvoicesController extends Controller
 {
@@ -62,14 +65,25 @@ class InvoicesController extends Controller
      */
     public function store(Request $request)
     {
-        $request['user_id']=$this->userID;
-        $user = \DB::table('users')->where('id', $this->userID)->first();
     //       \Mail::raw('以購買', function ($message) use ($user){
     //     $message->from('dontsaygoodbyebecause520@gmail.com','ga');
     //     $message->to($user->email, 'test')->subject('訂單成立通知');
     // });
-        $invoice=$this->invoiceRepository->createInvoice($request->except('items'));
-        $this->invoiceItemRepository->createItem($invoice,$request['items'],$this->userID);
+        // $invoice=$this->invoiceRepository->createInvoice($request->except('items'));
+        $user=JWTAuth::parseToken()->authenticate();
+        $items = $request->items;
+        foreach($items as $item){
+            $product=Product::with('user')->find($item['id']);
+            $restQty=$product->qty-$item['quantity'];
+            $product->update(['quantity'=>$restQty]);
+            $item['product_id'] = $item['id'];
+            unset($item['id']);
+            $item['seller_id']=$product->user->id;
+            $item['buyer_id']=$user->id;
+            $item = InvoiceItem::create($item);
+            $item->itemStatus()->attach(1);
+            $item->seller->notify(new \App\Notifications\ProductPurchased($item));
+        }
              return response()->json(
                    '已下訂單'
                 );

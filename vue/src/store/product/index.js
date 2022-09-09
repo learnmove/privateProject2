@@ -1,6 +1,8 @@
 import Vue from 'vue'
 const types={
     set_products:'set_products',
+    set_product: 'set_product',
+    set_recommand_products: 'set_recommand_products',
     delete_product:'delete_product',
     edit_product:'edit_product',
     fetchMyProducts:'fetchMyProducts',
@@ -12,24 +14,28 @@ const products={
     namespaced: true,
      state:{
           products:[],
-          edit_product:{category_id:''},
-          store_info:{}
+          edit_product:{},
+          store_info:{},
+          product: {name:'', category:{name:''}, school:{name:''},user:{account: ''}},
+          recommand_products: [],
         },
      mutations: { 
          [types.set_products](state,data){
-            state.products=data
+            state.products = data;
+         },
+         [types.set_product](state,data){
+            state.product = data;
+         },
+         [types.set_recommand_products](state,data){
+            state.recommand_products = data;
          },
          [types.delete_product](state,data){
              state.products.data=state.products.data.filter((item)=>{
-                 return item!==data
+                 return item !== data;
              })
          },
          [types.edit_product](state,data){
-             let product=data
-                state.edit_product=product
-                console.log(product)
-                state.edit_product.category_id=product.categories[0].id
-
+            state.edit_product=data
                 // Object.defineProperty(
                 //     state.edit_product,
                 //     'category_id',
@@ -51,14 +57,26 @@ const products={
      actions: { 
       
         fetchProducts({commit},{page,method_name,keyword='',selectSchoolID,category_id=''}){
+            console.log('2')
             Vue.axios.get(`/product?page=${page}&method_name=${method_name}&selectSchoolID=${selectSchoolID}&category_id=${category_id}&keyword=${keyword}`)
             .then(({data})=>{
                 commit(types.set_products,data)
             })
         },
         
-        
-        
+        fetchProduct({commit,state, dispatch},id){
+            Vue.axios.get(`/product/${id}`).then(({data})=>{
+                commit(types.set_product, data)
+                dispatch('fetchRecommandProducts', state.product.user.id)
+                
+            })
+        },
+        fetchRecommandProducts({commit}, user_id){
+            Vue.axios.get(`/fetchRecommandProducts?user_id=${user_id}`).then(({data})=>{
+                commit(types.set_recommand_products, data)
+            })
+        },
+
         deleteProduct({commit},product){
                Vue.axios.delete(`/product/${product.id}`)
             .then(({data})=>{
@@ -68,6 +86,7 @@ const products={
         editProduct({commit},source){
                Vue.axios.get(source)
             .then(({data})=>{
+                console.log(data)
                 commit(types.edit_product,data)
             })
         },

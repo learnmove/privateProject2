@@ -9,7 +9,7 @@ class Product extends Model
 {
     protected $table="products";
     public $timestamps=true;
-    protected $fillable = ['school_id','visible','quantity','name','price','description','user_id','img'];
+    protected $fillable = ['category_id','school_id','visible','quantity','name','price','description','user_id','img'];
     //   protected static function boot()
     // {
     //     parent::boot();
@@ -27,9 +27,11 @@ class Product extends Model
     public function questions(){
         return $this->hasMany(\App\Entities\ProductQuestion::class,'product_id','id');
     }
-    public function categories(){
-        return $this->belongsToMany(Category::class,'product_category','product_id','category_id');
+
+    public function category(){
+        return $this->belongsTo(Category::class);
     }
+
     public function school(){
         return $this->belongsTo(School::class);
     }

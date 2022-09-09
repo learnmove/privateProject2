@@ -39,14 +39,14 @@
 
          <label for="" class="col-sm-2 control-label">學校</label>
       <div class="col-sm-10">
-         <select class="form-control" v-model="form.school_id" id="">
-      <option v-for="school in schools" :value="school.id">{{school.name}} </option>
-  </select> 
       </div>
       
   </div>
   <button type="submit" class="btn btn-primary pull-right">註冊</button>
       </form>
+         <select data-live-search="true"  class="selectpicker" v-model="form.school_id" >
+      <option v-for="school in schools" :value="school.id">{{school.name}} </option>
+  </select> 
           </div>
       </div>
      
@@ -56,6 +56,7 @@
     export default{
         data(){
             return{
+                schools:[],
                 form:{
                     email:'',
                     password:'',
@@ -64,20 +65,26 @@
                     school_id:'',
                     account:''
                 },
-                    schools:[],
-                
                 source:'/register'
 
             }
         },
         beforeMount(){
+
             this.fetchSchoolList()
         }
         ,
         methods:{
              fetchSchoolList(){
               this.axios.get('/schoolist')
-              .then(({data})=>{this.schools=data})
+              .then(({data})=>{
+                this.schools=data;
+                setTimeout(function(){
+                  $(".selectpicker").selectpicker("refresh");
+                }, 0)
+
+
+              })
           },
             signup(){
                 this.axios.post(this.source,this.form)

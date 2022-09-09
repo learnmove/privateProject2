@@ -2,7 +2,7 @@
       <div class="col-sm-10">
 	<h5>改變學校</h5>
 
-         <select class="form-control"  id="" v-model="school_id">
+         <select data-live-search="true" data-live-search-style="startsWith" class="selectpicker"  id="" v-model="school_id">
       <option v-for="school in schools" :value="school.id"  >{{school.name}} </option>
   </select> 
  <button class="btn btn-primary" @click="change_school">確認</button>
@@ -39,12 +39,17 @@ export default{
               	this.schools.forEach((i)=>{
               		if(i.id== this.$auth.getUser().school_id)this.school_id=i.id
               	})
+                setTimeout(function(){
+                  $(".selectpicker").selectpicker("refresh");
+
+
+                }, 0)
               })
           },
           change_school(){
           	this.axios.post('/changeSchool',{school_id:this.school_id}).then(()=>{
               this.$swal('改變成功')
-
+              this.$auth.setSchoolId(this.school_id);
           	})
           }
     }

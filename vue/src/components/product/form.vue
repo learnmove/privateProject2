@@ -66,14 +66,26 @@
                             
                         </div>
                         <div class="col-sm-10">
-                        <select class="selectpicker" v-model="form.category_id">
+                        <select class="selectpicker" @change="fetchSubCategoryList()" v-model="category_id">
                             <option v-for="category in categories" :value="category.id" >{{category.name}}</option>
                         
                             </select>
 
                         </div>
                     </div>
-            
+                      <div class="form-group" >
+                        <div class="col-sm-2">
+                            <label for="">子分類</label>
+                            
+                        </div>
+                        <div class="col-sm-10">
+                        <select class="selectpicker" v-model="sub_category_id" >
+                            <option v-for="sub_category in sub_categories" :value="sub_category.id" >{{sub_category.name}}</option>
+                        
+                            </select>
+
+                        </div>
+                    </div>
                     <button class="btn btn-primary">送出</button>
                  </form>
                     
@@ -93,10 +105,13 @@
                 price:'',
                 img:'',
                 quantity:'1',
-                category_id:'1'
+                category_id: 1
                 
             },
+            category_id: '1',
             categories:[],
+            sub_categories:[],
+            sub_category_id: '',
             errors:{
 
             },
@@ -105,23 +120,14 @@
         }
     },
     beforeMount(){
-        this.fetchCategoryList()
-        if(this.$route.meta.edit){
-            this.source=`/product/${this.$route.params.pid}/edit`
-            this.$store.dispatch('products/editProduct',this.source)
-            this.upload_source='/product/'+this.$route.params.pid
-            this.method='put'
-            this.form.category_id='1'
+        if(this.$route.meta.tag == 'edit'){
+            this.editProduct();
+        }else{
+            this.fetchCategoryList();
         }
         
     }
     ,
-    watch:{
-        'getEditproduct':function(){
-            this.form=this.getEditproduct
-       
-        }           
-    },
     methods:{
         imgChg(e){
             var fr=new FileReader()
@@ -131,32 +137,72 @@
             }
         },
         upload(){
+            this.form.category_id = this.sub_category_id|| this.category_id;
             this.axios[this.method](`${this.upload_source}`,this.form)
             .then(({data})=>{this.$swal(data[0]);this.$router.push({name:'product'});})
             .catch((error)=>console.log(this.errors=error.response.data))
         },
         fetchCategoryList(){
+
               this.axios.get('/categorylist')
-              .then(({data})=>{this.categories=data})
+              .then(({data})=>{
+                this.categories=data
+                this.fetchSubCategoryList();
+                setTimeout(function(){
+                  $(".selectpicker").selectpicker("refresh");
+                }, 0)
+            })
+          },
+          editProduct(){
+            this.source=`/product/${this.$route.params.pid}/edit`
+            this.$store.dispatch('products/editProduct',this.source).then(()=>{
+                this.upload_source='/product/'+this.$route.params.pid
+                this.method='put'
+                this.form =  this.$store.state.products.edit_product;
+                this.axios.get('/categorylist')
+                  .then(({data})=>{
+                    if(this.$store.state.products.edit_product.category.parent_id){
+                        this.category_id =  this.$store.state.products.edit_product.category.parent_id;
+                    }else{
+                        this.category_id =  this.$store.state.products.edit_product.category_id;
+                    }
+                    this.categories=data
+                    this.fetchSubCategoryList();
+                    setTimeout(function(){
+                      $(".selectpicker").selectpicker("refresh");
+                    }, 0)
+                })
+            })
+          },
+          fetchSubCategoryList(){
+            if(this.$route.meta.tag == 'create'){
+              this.form.category_id = this.category_id;
+            }
+              this.sub_category_id = '';
+              this.sub_categories = [];
+              setTimeout(function(){
+                $(".selectpicker").selectpicker("refresh");
+              }, 0)
+              this.axios.get(`/sub_categorylist?id=${this.category_id}`)
+              .then(({data})=>{
+                if(data){
+                    if(this.$route.meta.tag =='edit'){
+                        this.sub_category_id = this.$store.state.products.edit_product.category_id || '';
+                    }else{
+                        this.sub_category_id = data[0].id;
+                    }
+                    this.form.category_id = this.sub_category_id;
+                    this.sub_categories=data
+                }
+
+
+                setTimeout(function(){
+                  $(".selectpicker").selectpicker("refresh");
+                }, 0)
+            })
           },
      
     },
-    computed:{
-        getEditproduct(){
-
-        if(this.$route.meta.edit){
-           return this.$store.state.products.edit_product
-            
-        }else{
-          return'' 
-        }
-         
-            
-        }
-        
-    }
-
-    
    }
 
 </script>

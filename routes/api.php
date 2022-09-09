@@ -17,14 +17,17 @@ Route::post('/login', 'Auth\LoginController@login');
 
 
 Route::resource('/product','ProductController');
+Route::get('/fetchRecommandProducts', 'ProductController@fetchRecommandProducts');
 Route::resource('/product_school','ProductController');
+Route::get('/mystore','ProductController@getMyStore');
+Route::get('/userstore/{user_account}','ProductController@getSellerStore');
 
 
 Route::get('/schoolist','ProductController@getSchoolList');
 Route::get('/categorylist','ProductController@getCategoryList');
+Route::get('/sub_categorylist','ProductController@getSubCategoryList');
+
 Route::resource('/items','InvoiceItemsController');
-Route::get('/mystore','ProductController@getMyStore');
-Route::get('/userstore/{user_account}','ProductController@getSellerStore');
 Route::resource('/rating','RatingController');
 Route::post('/itemfeedback','RatingController@ItemfFeedBack');
 Route::resource('/question','ProductQuestionsController');

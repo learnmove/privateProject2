@@ -17,9 +17,7 @@
                 <td>{{item.name}} </td>
                 <td>${{item.price}} </td>
                 <td>
-                    <button class="btn btn-waring" @click="inc(item)">+</button>
                     {{item.quantity}} 
-                    <button class="btn btn-danger" @click="dec(item)">-</button>
                     </td>
                 <td>${{item.itemTotal}} </td>
                 <td><button class="btn btn-danger" @click="removeItem(item)">刪除</button> </td>
@@ -59,12 +57,6 @@ import {mapState,mapGetters} from 'vuex'
             removeItem(item){
                 this.$store.dispatch('cart/removeItem',item)
             },
-            inc(item){
-                this.$store.dispatch('cart/incrementQty',item)
-            },
-            dec(item){
-                this.$store.dispatch('cart/decrementQty',item)
-            }
         },
         computed:{
             // ...mapState({

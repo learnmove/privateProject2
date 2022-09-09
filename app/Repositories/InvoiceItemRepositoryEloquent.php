@@ -7,7 +7,6 @@ use Prettus\Repository\Criteria\RequestCriteria;
 use App\Repositories\invoiceItemRepository;
 use App\Entities\InvoiceItem;
 use App\Validators\InvoiceItemValidator;
-use App\Entities\Product;
 use JWTAuth;
 /**
  * Class InvoiceItemRepositoryEloquent
@@ -35,33 +34,13 @@ class InvoiceItemRepositoryEloquent extends BaseRepository implements InvoiceIte
     {
         $this->pushCriteria(app(RequestCriteria::class));
     }
-    public function createItem($invoice,$items, $userID){
+    public function createItem($items){
         
-        $user=JWTAuth::parseToken()->authenticate();
-        $Invoiceitems=[];
-        foreach($items as $item){
-            $item['product_id']=$item['id'];
-            $item['item_total_price']=$item['itemTotal'];
-            $item['item_total_qty']=$item['quantity'];
-            $product=$this->updateProductQty($item);
-            $item['seller_id']=$product->user->id;
-            $item['buyer_id']=$userID;
-            $Invoiceitems[]=$item;
-        }
-        $invoice->items()->createMany($Invoiceitems);
-        foreach($invoice->items as $item){
-            $item->itemStatus()->attach(1);
-            $item->seller->notify(new \App\Notifications\ProductPurchased($item));
-            
-        }
-        return $invoice->items;
-    
+
     }
     public function updateProductQty($item){
         
-        $product=Product::with('user')->find($item['id']);
-        $restQty=$product->qty-$item['quantity'];
-        $product->update(['quantity'=>$restQty]);
+
         return $product;
     }
     

@@ -1,32 +1,39 @@
 
-import Product_Form from '@/components/product/form'
-import Product_Index from '@/components/product/index'
+import ProductForm from '@/components/product/form'
+import ProductIndex from '@/components/product/index'
 import Cart from '@/components/product/cart'
 import Order from '@/components/product/order'
 import Seller from '@/components/product/mysell'
 import MySellOut from '@/components/product/sellout'
 import UserStore from '@/components/product/userstore'
 import UserRating from '@/components/product/rating'
+import Product from '@/components/product/product'
+
 
 
  const product=[
 {
     name:'product',
-    component:Product_Index,
+    component:ProductIndex,
     path:'/product'
  },
  {
     name:'product_create',
-    component:Product_Form,
+    component:ProductForm,
     path:'/product/create',
-    meta:{forAuth:true,create:true}
+    meta:{forAuth:true, tag: 'create'}
 
  },
  {
+    name: 'product_',
+    component: Product,
+    path: '/product/:pid'
+ },
+ {
     name:'product_edit',
-    component:Product_Form,
+    component:ProductForm,
     path:'/product/:pid/edit',
-    meta:{forAuth:true,edit:true}
+    meta:{forAuth:true, tag: 'edit'}
 
  },
  {
@@ -60,8 +67,8 @@ import UserRating from '@/components/product/rating'
  },
  {
      name:'userstore',
-     component:UserStore,
-     path:'/product/:user_account'
+     component: UserStore,
+     path:'/:user_account'
  }
 
 

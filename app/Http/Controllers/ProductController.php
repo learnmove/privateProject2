@@ -29,7 +29,7 @@ class ProductController extends Controller
          'index',
          'show',
          'getSellerStore',
-         'getSchoolList','getCategoryList');
+         'getSchoolList','getCategoryList', 'fetchRecommandProducts', 'getSubCategoryList');
 
        try{
       if(JWTAuth::getToken()){
@@ -43,9 +43,41 @@ class ProductController extends Controller
      }
     public function index()
     {
-        return $this->productRepository->withUserAndPage(10);
-        //
+        $request=request();
+        $p = Product::with('user','category','school')
+        ->withCount('questions')
+                 ->where('quantity','>','0')
+                 ->where('visible','<>','0');
+        if($request->selectSchoolID){
+            $p =$p->where('school_id', $request->selectSchoolID);
+        }
 
+        if($request->category_id){
+            $category = \DB::table('categories')->find($request->category_id);
+
+            if($category->parent_id == 0){
+                $categories = \DB::table('categories')->where('parent_id', $category->id)->pluck('id');
+                $categories[] = $category->id;
+                $p = $p->whereIn('category_id', $categories);
+
+            }else{
+                $p = $p->where('category_id', $category->id);
+            }
+
+        }
+        
+        if($request->keyword){
+            $p = $p->search($request->keyword);
+        }
+        $p = $p->orderBy('updated_at','desc');
+        return $p->paginate(10);
+
+    }
+
+    public function fetchRecommandProducts(){
+        $request = request();
+        $products = \DB::table('products')->select(\DB::raw('SUBSTRING(name, 1, 20) as name,id, img,price'))->where('user_id', $request->user_id)->inRandomOrder()->take(4)->get();
+        return $products;
     }
 
     /**
@@ -76,7 +108,6 @@ class ProductController extends Controller
         $product['user_id'] = JWTAuth::parseToken()->authenticate()->id;
         $product['school_id'] = JWTAuth::parseToken()->authenticate()->school_id;
         $product=  Product::create($product);
-        $product->categories()->attach($request->category_id,['school_id' => $product['school_id']]);
 
         return response()->json(['上傳成功']);
     }
@@ -90,6 +121,8 @@ class ProductController extends Controller
     public function show($id)
     {
         //
+        $product = Product::with('user', 'category', 'school')->where('id', $id)->first();
+        return $product;
     }
 
     /**
@@ -100,7 +133,7 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        $product=$this->productRepository->with(['categories'])->find($id);
+        $product = Product::with('category')->find($id)->makeHidden(['user_id', 'school_id', 'updated_at', 'created_at']);
         return response()->json($product);
         //
     }
@@ -116,9 +149,19 @@ class ProductController extends Controller
     {
         $imgpath=$this->productService->storeImg($request->img);
         if($imgpath){
-        $request['img']=$imgpath;
+           $request['img']=$imgpath;
         }
-        $updateMessage=$this->productRepository->updateProduct($id,$request);
+        $user_id=JWTAuth::parseToken()->authenticate()->id;
+        $product = $request->all();
+        $old_product = Product::find($id);
+        $updateMessage = '更新成功';
+        if($old_product->user_id == $user_id){
+            $new_product = $old_product->update($product);
+        }else{
+
+            $updateMessage='更新失敗';
+        }
+
     return response()->json([$updateMessage]);
     }
 
@@ -132,7 +175,10 @@ class ProductController extends Controller
     {
         // $deleteStatus=$this->productRepository->destroypProduct($id);
         // 改成有visible欄位 軟刪
-        $softDeleteStatus=$this->productRepository->softDeleteStatus($id);
+        $product= Product::find($id);
+        $product->visible=0;
+        $product->save();
+        $softDeleteStatus = '刪除成功';
         return response()->json([$softDeleteStatus]);
     }
     public function getMyStore(){
@@ -147,11 +193,13 @@ class ProductController extends Controller
      return response()->json($schools );
     }
      public function getCategoryList(){
-
-        $categories= DB::table('categories')->get();
-
+        $categories= DB::table('categories')->where('id', '<',100)->get();
         return response()->json($categories);
+    }
+     public function getSubCategoryList(){
 
+        $categories= DB::table('categories')->where('parent_id', request()->id)->get();
+        return response()->json($categories);
     }
 
 }

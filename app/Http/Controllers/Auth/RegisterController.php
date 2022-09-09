@@ -69,8 +69,16 @@ class RegisterController extends Controller
         if($v->fails()){
             return $this->rj(['error'=>$v->messages()],404);
         }
+
+        if(request()->avatar){
+
+        }else{
+            $rq['avatar'] = 'a.jpg';
+        }
+
         return User::create([
             'name' => $rq['name'],
+            'avatar' => $rq['avatar'],
             'account' => $rq['account'],
             'email' => $rq['email'],
             'school_id' => $rq['school_id'],
