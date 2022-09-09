@@ -92,16 +92,16 @@ export default {
       this.GetUnreadMessage()
     }
     let that=this
-    this.$echo.private('App.User.' + this.$auth.getUserId())
-    .listen('.event',function(data){
-      console.log(data)
-            that.haveChat++
-    })
-    .notification((message) => {
-        this.messages.unshift(message)
-        this.UnReadMessageCount++
-        this.dispalyBadge=true
-    });
+    // this.$echo.private('App.User.' + this.$auth.getUserId())
+    // .listen('.event',function(data){
+    //   console.log(data)
+    //         that.haveChat++
+    // })
+    // .notification((message) => {
+    //     this.messages.unshift(message)
+    //     this.UnReadMessageCount++
+    //     this.dispalyBadge=true
+    // });
   },
   methods:{
     a(){

@@ -197,8 +197,11 @@ class ProductController extends Controller
         return response()->json($categories);
     }
      public function getSubCategoryList(){
-
-        $categories= DB::table('categories')->where('parent_id', request()->id)->get();
+        $categories = [];
+        if((int)(request()->id)){
+            $categories= DB::table('categories')->where('parent_id', request()->id)->get();
+            
+        }
         return response()->json($categories);
     }
 

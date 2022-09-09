@@ -223,9 +223,14 @@ created_at:"1 秒前"})
           },
           fetchSchoolList(){
               this.axios.get('/schoolist')
-              .then(({data})=>{this.schools=data
+              .then(({data})=>{
+                if(data){
+                  this.schools=data
+                  
+                }
+
                 setTimeout(function(){
-                  $(".selectpicker").selectpicker("refresh");
+                  // $(".selectpicker").selectpicker("refresh");
                 }, 0)
               })
           },

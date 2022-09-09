@@ -16,15 +16,15 @@ Vue.use(VueSweetAlert)
 Vue.config.productionTip = false
 Vue.use(vueaxios,axios)
 Vue.use(Auth)
-Vue.use(VueEcho,{
-    broadcaster: 'socket.io',
-  key:'36e77906f0963e755c057cf3bb2cf1da',
-  host: 'http://192.168.1.101:6001',
-  auth:{headers:{
-    Authorization:Vue.auth.getToken()
-  }}
+// Vue.use(VueEcho,{
+//     broadcaster: 'socket.io',
+//   key:'36e77906f0963e755c057cf3bb2cf1da',
+//   host: 'http://192.168.1.101:6001',
+//   auth:{headers:{
+//     Authorization:Vue.auth.getToken()
+//   }}
 
-})
+// })
 
 Vue.axios.interceptors.request.use(config=>{
 // Vue.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'

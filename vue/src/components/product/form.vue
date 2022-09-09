@@ -66,7 +66,7 @@
                             
                         </div>
                         <div class="col-sm-10">
-                        <select class="selectpicker" @change="fetchSubCategoryList()" v-model="category_id">
+                        <select class="selectpicker" @change="selectCategory()" v-model="category_id">
                             <option v-for="category in categories" :value="category.id" >{{category.name}}</option>
                         
                             </select>
@@ -79,7 +79,7 @@
                             
                         </div>
                         <div class="col-sm-10">
-                        <select class="selectpicker" v-model="sub_category_id" >
+                        <select class="selectpicker" @change="selectSubCategory()" v-model="sub_category_id" >
                             <option v-for="sub_category in sub_categories" :value="sub_category.id" >{{sub_category.name}}</option>
                         
                             </select>
@@ -105,10 +105,10 @@
                 price:'',
                 img:'',
                 quantity:'1',
-                category_id: 1
+                category_id: ''
                 
             },
-            category_id: '1',
+            category_id: '',
             categories:[],
             sub_categories:[],
             sub_category_id: '',
@@ -116,18 +116,26 @@
 
             },
             source:'/product',
-            upload_source:'/product'
+            upload_source:'/product',
+            isFetchProduct: false,
         }
     },
     beforeMount(){
-        if(this.$route.meta.tag == 'edit'){
-            this.editProduct();
-        }else{
-            this.fetchCategoryList();
-        }
+
+      if(this.$route.meta.tag == 'edit'){
+        this.fetchProduct();
+      }else{
+        this.fetchCategoryList();
+      }
+        // this.editProduct();
+        // this.fetchCategoryList();
         
     }
     ,
+    mounted(){
+                    // this.category_id =  5;
+
+    },
     methods:{
         imgChg(e){
             var fr=new FileReader()
@@ -143,63 +151,69 @@
             .catch((error)=>console.log(this.errors=error.response.data))
         },
         fetchCategoryList(){
-
-              this.axios.get('/categorylist')
+           return   this.axios.get('/categorylist')
               .then(({data})=>{
                 this.categories=data
-                this.fetchSubCategoryList();
-                setTimeout(function(){
-                  $(".selectpicker").selectpicker("refresh");
-                }, 0)
+                // this.selectCategory();
+                  // $(".selectpicker").selectpicker("refresh");
             })
           },
-          editProduct(){
+          fetchProduct(){
             this.source=`/product/${this.$route.params.pid}/edit`
-            this.$store.dispatch('products/editProduct',this.source).then(()=>{
-                this.upload_source='/product/'+this.$route.params.pid
-                this.method='put'
-                this.form =  this.$store.state.products.edit_product;
-                this.axios.get('/categorylist')
-                  .then(({data})=>{
-                    if(this.$store.state.products.edit_product.category.parent_id){
-                        this.category_id =  this.$store.state.products.edit_product.category.parent_id;
+            var that =this;
+            this.fetchCategoryList().then(function(){
+              that.axios.get(that.source)
+              .then(({data})=>{
+                  if(data){
+                    that.isFetchProduct = true;
+                    that.form = data;
+                        // that.category_id =  5;
+
+                    if(data.category.parent_id){
+                      that.category_id =  data.category.parent_id;
                     }else{
-                        this.category_id =  this.$store.state.products.edit_product.category_id;
+                        that.category_id =  data.category_id;
                     }
-                    this.categories=data
-                    this.fetchSubCategoryList();
-                    setTimeout(function(){
-                      $(".selectpicker").selectpicker("refresh");
-                    }, 0)
+                    
+                  }
+                  return data
+              }).then((data)=>{
+                that.fetchSubCategoryList().then(function(){
+                      that.sub_category_id = data.category_id
                 })
+              })
+            })
+                // this.upload_source='/product/'+this.$route.params.pid
+                // this.method='put'
+                // this.form =  this.$store.state.products.edit_product;
+                // this.axios.get('/categorylist')
+                //   .then(({data})=>{
+                //     this.categories=data
+                //     this.selectCategory();
+                // })
+          },
+
+          fetchSubCategoryList(){
+            console.log(this.category_id)
+            return  this.axios.get(`/sub_categorylist?id=${this.category_id}`)
+              .then(({data})=>{
+                this.sub_categories = data;
+                return data;
             })
           },
-          fetchSubCategoryList(){
-            if(this.$route.meta.tag == 'create'){
-              this.form.category_id = this.category_id;
-            }
-              this.sub_category_id = '';
-              this.sub_categories = [];
-              setTimeout(function(){
-                $(".selectpicker").selectpicker("refresh");
-              }, 0)
-              this.axios.get(`/sub_categorylist?id=${this.category_id}`)
-              .then(({data})=>{
-                if(data){
-                    if(this.$route.meta.tag =='edit'){
-                        this.sub_category_id = this.$store.state.products.edit_product.category_id || '';
-                    }else{
-                        this.sub_category_id = data[0].id;
-                    }
-                    this.form.category_id = this.sub_category_id;
-                    this.sub_categories=data
-                }
+          selectSubCategory(){
+            // this.form.category_id = this.sub_category_id;
+          },
+          selectCategory(){
+            this.sub_categories = [];
+            this.sub_category_id = '';
+            this.form.category_id = this.category_id;
 
+            this.fetchSubCategoryList();
 
-                setTimeout(function(){
-                  $(".selectpicker").selectpicker("refresh");
-                }, 0)
-            })
+            // if(this.$route.meta.tag == 'create'){
+            //   this.form.category_id = this.category_id;
+            // }
           },
      
     },
