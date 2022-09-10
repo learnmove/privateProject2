@@ -1,4 +1,5 @@
 <template>
+
       <div class="col-sm-10">
 	<h5>改變學校</h5>
 
@@ -7,8 +8,11 @@
   </select> 
  <button class="btn btn-primary" @click="change_school">確認</button>
       </div>
+
 </template>
+
 <script>
+
 import {mapActions,mapState,mapGetters} from 'vuex'
 import store from '@/store/index'
 export default{

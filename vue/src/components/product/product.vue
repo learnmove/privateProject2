@@ -20,19 +20,23 @@
           <h3>{{product.name}}</h3>
           <p>{{product.description}}</p>
           <span class="text-waring" style="font-size:1rem;color: rgb(238, 77, 45);">${{product.price}} </span>
-          <div class="">數量{{product.quantity}} </div>
+
+          <div class=""  v-if="product.quantity>0">數量{{product.quantity}} </div>
+          <div class="" v-else>
+           <span class="text-danger">售完</span>
+          </div>
           <div class="">賣家：<router-link :to="{name:'userstore',params:{'user_account':product.user.account}}">{{product.user.account}}</router-link>
           </div>
-          <div v-if="product.user_id!=$auth.getUser().id" class="">
-            選擇數量<select v-model.number="product.purchaseQty" value="1">
-              <option :value=n v-for="n in product.quantity">{{n}}</option>
-            </select>
+          <div class="" v-if="!(product.quantity <=0)">
+            <div v-if="product.user_id!=$auth.getUser().id" class="">
+              選擇數量<select v-model.number="product.purchaseQty" value="1">
+                <option :value=n v-for="n in product.quantity">{{n}}</option>
+              </select>
+            </div>
+              <a href="#" @click.prevent="purchase(product)" class="btn btn-default" role="button" v-if="product.user_id!=$auth.getUserId()">放進購物車</a>
           </div>
-          <div class="">
-            <a href="#" @click.prevent="purchase(product)" class="btn btn-default" role="button" v-if="product.user_id!=$auth.getUserId()">放進購物車</a></p>
             <button class="btn btn-primary" @click="showinput(product)">詢問/商品留言</button>
             <button class="btn btn-danger" @click="chat_select(product.user)" v-if="product.user_id!=$auth.getUserId()">聊聊</button>
-          </div>
         </div>
       </div>
     </div>

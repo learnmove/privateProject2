@@ -2,8 +2,10 @@
 namespace App\Services;
 class ProductService{
     public function storeImg($img=null){
-          if($img){
+        $imgpath = '';
+      if($img){
             $imgArray=explode(',',$img);
+
             if(str_contains($imgArray[0],['jpeg'])){
                 $extension='jpg';
                 $decode=base64_decode($imgArray[1]);
@@ -14,5 +16,6 @@ class ProductService{
                 return $imgpath;
             }
         }
+        return $imgpath;
     }
 }

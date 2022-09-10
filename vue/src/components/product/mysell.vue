@@ -11,7 +11,7 @@
   <div class="col-sm-6 col-md-4" v-for="product in products.data">
     <div class="thumbnail">
          <div class="category_name">
-        【{{product.categories[0].name}}】
+        【{{product.category.name}}】
         </div>
       <div v-if="product.user_id==$auth.getUser().id" class="text-right text-danger">
           <button @click="deleteProduct(product)" class="btn btn-danger">x</button>
@@ -22,7 +22,7 @@
         <h3>{{product.name}}</h3>
         <p>{{product.description}}</p>
         <span class="text-waring">${{product.price}} </span>
-        <div class="" v-if="product.qty>0">數量{{product.qty}} </div>
+        <div class="" v-if="product.quantity>0">數量{{product.quantity}} </div>
        <div class="" v-else>
         <span class="text-danger">售完</span>
 
@@ -77,6 +77,7 @@ import modal from'@/components/plugin/Modal.vue'
                 question_page:'',
                  question_content:'',
                  selectProduct:{},
+                 fetchProducts_params: {page:1,method_name:'fetchProducts',selectSchoolID:'',category_id:'',keyword:''}
 
             }
         },
@@ -132,8 +133,11 @@ import modal from'@/components/plugin/Modal.vue'
         //   ...mapActions('products',['fetchProducts'],this.page)
      
         fetchProducts(pagination={page:1,method_name:'fetchMyProducts'}){
-            console.log(pagination)
             return this.$store.dispatch('products/fetchMyProducts',pagination)},
+
+
+
+
         deleteProduct(product){
             const that=this
             this.$swal({
@@ -148,20 +152,6 @@ import modal from'@/components/plugin/Modal.vue'
     that.$store.dispatch('products/deleteProduct',product)
     that.$swal('刪了')});
         },
-        purchase(product){
-            if(this.$auth.isAuthenticate()){
-                if(product.purchaseQty){
-                    this.$store.dispatch('cart/addItem',product)
-                    this.$swal('放進去了')
-                }else{
-                    this.$swal('你沒選數量')
-                }
-            
-            }else{
-                this.$swal('請先登入')
-            }
-        
-        }
       },
       computed:{
         //   ...mapGetters('products',['getProducts'])

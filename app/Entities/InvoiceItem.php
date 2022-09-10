@@ -10,7 +10,7 @@ class InvoiceItem extends Model implements Transformable
 {
     use TransformableTrait;
     protected $table="invoice_items";
-    protected $fillable = ['buyer_id','user_name','product_name','invoice_id','product_id','item_total_price','quantity','seller_id'];
+    protected $fillable = ['buyer_id','user_name','product_name','invoice_id','product_id','quantity','seller_id','amount'];
     public function invoice(){
         return $this->belongsTo(Invoice::class);
     }

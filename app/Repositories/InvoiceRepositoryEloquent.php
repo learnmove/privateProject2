@@ -42,12 +42,12 @@ class InvoiceRepositoryEloquent extends BaseRepository implements InvoiceReposit
         $invoice_result=$this->model->create($invoice);
         return $invoice_result;
     }
-    public function findInvoiceOfItems($userid){
+    public function findInvoiceOfItems(){
         $request=request();
         $user_invoice='';
         switch($request->method_name){
             case 'fetchAllOrders':
-             $user_invoice=$this->getInvoiceOfItems($userid);
+             $user_invoice=$this->getInvoiceOfItems();
             break;            
             case 'buycomplete':
             $user_invoice=$this->getInvoiceOfStatusItems($userid,[12]);
@@ -64,14 +64,16 @@ class InvoiceRepositoryEloquent extends BaseRepository implements InvoiceReposit
         
         }
 
-    public function getInvoiceOfItems($userid){
-        return $user_invoice=$this->model
-        ->with(['items',
-        'items.itemStatus','items.product','items.product.user','items.rating','items.rating_comment'])
-        ->where('user_id',$userid)
+    public function getInvoiceOfItems(){
+        $user_id=JWTAuth::parseToken()->authenticate()->id;
+
+        $user_invoice=InvoiceItem::with([
+        'itemStatus','product','product.user','rating','rating_comment'])
+        ->where('buyer_id',$user_id)
         ->orderBy('created_at','desc')
         // ->get();
         ->paginate(3);
+        return $user_invoice;
     }
     public function getInvoiceOfStatusItems($userid,$statusID){
 

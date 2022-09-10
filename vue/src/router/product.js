@@ -45,18 +45,18 @@ import Product from '@/components/product/product'
  {
      name:'order',
      component:Order,
-     path:'/product/order',
+     path:'/master/my?type=buy_list',
      meta:{forAuth:true}
  },
   {
      name:'mysell',
      component:Seller,
-     path:'/product/mysell',
+     path:'/master/my/mysell',
      meta:{forAuth:true}
  },  {
      name:'sellout',
      component:MySellOut,
-     path:'/product/sellout',
+     path:'/master/my/sellout',
      meta:{forAuth:true}
  },
   {

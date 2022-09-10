@@ -123,9 +123,14 @@
     beforeMount(){
 
       if(this.$route.meta.tag == 'edit'){
+        this.source=`/product/${this.$route.params.pid}/edit`;
+        this.upload_source='/product/'+this.$route.params.pid;
+        this.method = 'put'
         this.fetchProduct();
       }else{
-        this.fetchCategoryList();
+        this.fetchCategoryList().then(()=>{
+                $(".selectpicker").selectpicker("refresh");
+        });
       }
         // this.editProduct();
         // this.fetchCategoryList();
@@ -147,19 +152,21 @@
         upload(){
             this.form.category_id = this.sub_category_id|| this.category_id;
             this.axios[this.method](`${this.upload_source}`,this.form)
-            .then(({data})=>{this.$swal(data[0]);this.$router.push({name:'product'});})
+            .then(({data})=>{this.$swal(data[0]);this.$router.push({name:'mysell'});})
             .catch((error)=>console.log(this.errors=error.response.data))
         },
         fetchCategoryList(){
            return   this.axios.get('/categorylist')
               .then(({data})=>{
                 this.categories=data
+
+
                 // this.selectCategory();
                   // $(".selectpicker").selectpicker("refresh");
             })
           },
           fetchProduct(){
-            this.source=`/product/${this.$route.params.pid}/edit`
+
             var that =this;
             this.fetchCategoryList().then(function(){
               that.axios.get(that.source)
@@ -180,6 +187,9 @@
               }).then((data)=>{
                 that.fetchSubCategoryList().then(function(){
                       that.sub_category_id = data.category_id
+                }).then(()=>{
+                      $(".selectpicker").selectpicker("refresh");
+                  
                 })
               })
             })
@@ -209,7 +219,9 @@
             this.sub_category_id = '';
             this.form.category_id = this.category_id;
 
-            this.fetchSubCategoryList();
+            this.fetchSubCategoryList().then(()=>{
+                $(".selectpicker").selectpicker("refresh");
+            });
 
             // if(this.$route.meta.tag == 'create'){
             //   this.form.category_id = this.category_id;

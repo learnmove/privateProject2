@@ -104,7 +104,6 @@ class ProductController extends Controller
         if($path){
             $product['img']=$path;
         }
-
         $product['user_id'] = JWTAuth::parseToken()->authenticate()->id;
         $product['school_id'] = JWTAuth::parseToken()->authenticate()->school_id;
         $product=  Product::create($product);
@@ -147,12 +146,12 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $imgpath=$this->productService->storeImg($request->img);
-        if($imgpath){
-           $request['img']=$imgpath;
+        $product = $request->all();
+        $path=$this->productService->storeImg($request->img);
+        if($path){
+            $product['img']=$path;
         }
         $user_id=JWTAuth::parseToken()->authenticate()->id;
-        $product = $request->all();
         $old_product = Product::find($id);
         $updateMessage = '更新成功';
         if($old_product->user_id == $user_id){

@@ -50,7 +50,7 @@ class InvoicesController extends Controller
      */
     public function index()
     {
-        $userItem=$this->invoiceRepository->findInvoiceOfItems($this->userID);
+        $userItem=$this->invoiceRepository->findInvoiceOfItems();
         // $userItem=$this->invoiceRepository->findByField('user_id',35);
         
         return response()->json($userItem);
