@@ -14,13 +14,19 @@ use \App\Entities\Product;
 */
 Route::post('/register', 'Auth\RegisterController@create');
 Route::post('/login', 'Auth\LoginController@login');
+Route::get('/getProfile','Auth\ProfileController@getProfile');
+Route::post('/updateProfile','Auth\ProfileController@updateProfile');
 
-
+// Route::group(['namespace' => 'Auth'], function(){
+	
+// });
 Route::resource('/product','ProductController');
 Route::get('/fetchRecommandProducts', 'ProductController@fetchRecommandProducts');
 Route::resource('/product_school','ProductController');
 Route::get('/mystore','ProductController@getMyStore');
 Route::get('/userstore/{user_account}','ProductController@getSellerStore');
+
+
 
 
 Route::get('/schoolist','ProductController@getSchoolList');
@@ -40,7 +46,7 @@ Route::get('/Getnotify','NotificationController@Getnotify');
 Route::get('/MarkRead','NotificationController@MarkRead');
 Route::get('/ReadChannel','ChatController@ReadChannel');
 
-Route::post('/changeSchool','Auth\LoginController@changeSchool');
+Route::post('/changeProfile','Auth\LoginController@changeProfile');
 
 Route::get('/getunread_message','ChatController@GetUnreadMessage');
 Route::get('/getemail',function(){

@@ -1,106 +1,177 @@
 <template>
-<div>
- <div class="panel panel-default" v-for="item in items">
-        <div class="panel-heading">
-            <span class="text-center">售出清單</span>
-        </div>
-<div class="" >
-        
- <table class="table table-striped " >
-     <thead>
- <tr>
-            <th>售出日期</th>
-            <th>商品名稱</th>
-            </tr>
-     </thead>
-            <tr >
-                <td>{{item.created_at}} </td>
-                <td>{{item.product.name}} </td>
-            </tr>
-  </table>
-  <table class="table table-striped " >
-      <thead>
- <tr>
+  <div class="container">
+    <pagination :method_name="method_name" @fetchProducts="fetchProducts" :last_page="order_info.last_page"></pagination>
+    <ul class="nav nav-pills">
+      <li role="presentation" class="active"><a href="#" @click.prevent="filter_buy('buy_list')">所有訂單</a></li>
+      <li role="presentation"><a href="#" @click.prevent="filter_buy('trade_complete')">完成清單</a></li>
+      <li role="presentation"><a href="#" @click.prevent="filter_buy('buyrefund')">退貨清單</a></li>
+      <li role="presentation"><a href="#" @click.prevent="filter_buy('buycancell')">取消清單</a></li>
+    </ul>
+    <div class="panel panel-default" v-for="order in orders ">
+      <div class="panel-heading">
+        <span class="text-center">購買訂單</span>
+      </div>
+      <div class="pane-body">
+        <table class="table table-striped ">
+          <tr>
+            <th>購買日期</th>
+            <th>商品</th>
+
+          </tr>
+          <tr>
+            <td>{{order.created_at}} </td>
+            <td>
+            <router-link tag="a" style="background: white;border-color: white" class="" :to="{name:'product_',params:{pid:order.product.id}}"><img style="max-height:260px;" class="img-responsive" :src="order.product.img" alt="">
+              <span>{{order.product.name}} </span>
+            </router-link>
+
+
+
+            
+
+          </td>
+          </tr>
+          <!--<tr>
+                <td colspan="">總價</td>
+                <td colspan="">${{order.total_price}} </td>
+                
+            </tr>-->
+        </table>
+        <table class="table table-striped ">
+          <tr>
             <th>數量</th>
             <th>總共</th>
-            <th>買家</th>
-            </tr>
-      </thead>
-            <tr >
-                <td>
-                    {{item.item_total_qty}} 
-                    </td>
-                <td>${{item.item_total_price}} </td>
-                <td>{{item.invoice.user.account}}        <button class="btn btn-danger" @click="chat_select(item.buyer_id)">聊聊</button>
- </td>
-              
-            </tr>
-            
-  </table>
-   <table class="table table-striped " >
-       <thead>
- <tr>
-            <th>訂單管理</th>
-            <th>訂單狀態</th>
-            <th>訂單取消</th>
-            </tr>
-       </thead>
-           <tr>
-                <td v-if="item.item_status[0].id==2 "><button class="btn btn-primary btn-xs" @click="statusConfirm(item,3)">收款確認</button> </td>
-                <td v-if="item.item_status[0].id==3 "><button class="btn btn-primary btn-xs" @click="statusConfirm(item,4)">出貨確認</button> </td>
-                <!--<td v-if="item.item_status[0].id==9||item.item_status[0].id==12||item.item_status[0].id==11 "><button class="btn btn-primary btn-xs" >評價</button> </td>-->
-                <td v-if="item.item_status[0].id==8&&item.item_status[0].pivot.requester_id!==$auth.getUserId()"><button class="btn btn-primary btn-xs" @click="statusConfirm(item,9)">同意取消交易</button> </td>
-                <td>{{item.item_status[0].content}} </td>
-                <td ><button class="btn btn-primary btn-xs" v-if="item.item_status[0].id==10" @click="statusConfirm(item,14)">同意退貨</button> </td>
-                <td ><button class="btn btn-primary btn-xs" v-if="item.item_status[0].id==1||item.item_status[0].id==2||item.item_status[0].id==3" @click="statusConfirm(item,8)">要求取消交易</button> </td>
+            <th>賣家</th>
+          </tr>
+          <tr>
+            <td>
+              {{order.quantity}}
+            </td>
+            <td>${{order.amount}} </td>
+            <td>
+              <router-link :to="{name:'userstore',params:{'user_account':order.product.user.account}}">{{order.product.user.account}}</router-link>
+              <button class="btn btn-danger" @click="chat_select(order.seller_id)">聊聊</button>
+            </td>
+          </tr>
+          <!--<tr>
+                <td colspan="">總價</td>
+                <td colspan="">${{order.total_price}} </td>
                 
-              
+            </tr>-->
+        </table>
+        <table class="table table-striped ">
+          <thead>
+            <tr>
+              <th>訂單管理</th>
+              <th>訂單狀態</th>
+              <th>訂單取消</th>
             </tr>
-  </table>
-               </div> 
-
-     
-  
+          </thead>
+          <tr>
+            <td><button class="btn btn-primary btn-xs" @click="statusConfirm(order,8)">{{order.pay_type.cht_name}}</button> </td>
+          </tr>
+        </table>
+        <table v-if="!order.rating">
+          <tr>
+            <td>
+              <Rate  :value="order.rating?order.rating.level:1" @afterRate="onAftereRate" :order="order" :length="5"></Rate>
+            </td>
+          </tr>
+        </table>
+        <table v-if="!order.rating_comment">
+          <input  class="form-control" type="text" v-model="order.feedback">
+          <td ><button class="btn btn-primary btn-xs" @click="itemfeedback(order)">評價</button> </td>
+          </td>
+        </table>
+      </div>
+      <tr>
+        <td colspan="">訂單總價</td>
+        <td colspan="">${{order.amount}} </td>
+      </tr>
+    </div>
   </div>
-</div>
-   
 </template>
 <script>
-   export default{
-       data(){
-           return{
-            items:[]
-           }
-       },
-        beforeMount(){
-      this.fetchData()
-        
-    },
-    methods:{
-          chat_select(buyer_id){
-                this.$store.dispatch('chat/setUser', buyer_id).then(()=>{
-                    this.axios.post('/addChatUser',{chat_id:buyer_id})
-                    .then(({data})=>{
-                      this.$router.push({name:'chat'})
-                  })
-                  
-                })
-          },
-        statusConfirm(item,status){
+import pagination from '@/components/pagination.vue'
+import Rate from '@/components/plugin/Rate.vue'
+export default {
+  components: {},
+  data() {
+    return {
 
-            this.axios.put(`/items/${item.id}`,{status:status})
-            .then(({data})=>{
-                console.log(data);
-      this.fetchData()
-                this.$router.push({redirect:{name:'sellout'}})
-                })
-            .catch((error)=>console.log(error.response))
-        },
-        fetchData(){
-              this.axios.get(`/items`)
-        .then(({data})=>{this.items=data;})
-        }
+      orders: [],
+      order_info: {},
+      method_name: '',
+      page: 1
     }
-   }
+  },
+  components: {
+    Rate,
+    pagination
+  },
+  beforeMount() {
+    this.$router.push({query: {type: 'buy_list'}})
+    this.fetchData(this.$route.query.type)
+  },
+  methods: {
+    chat_select(seller_id) {
+      this.$store.dispatch('chat/setUser', seller_id).then(() => {
+        this.axios.post('/addChatUser', { chat_id: seller_id })
+          .then(({ data }) => {
+            this.$router.push({ name: 'chat' })
+          })
+
+      })
+    },
+    filter_buy(method_name) {
+      // this.$router.push({name:'order',query: {type: method_name}})
+      this.$router.push({query: {type: method_name}})
+      this.fetchData(method_name)
+    },
+    fetchProducts({ page }) {
+      this.page = page
+      this.fetchData()
+    },
+    itemfeedback(item) {
+      this.axios.post('/itemfeedback', { item: item })
+        .then(({ data }) => {
+          this.$swal('評價成功')
+          this.fetchData()
+        })
+    },
+    onAftereRate(rate, item) {
+      this.axios.post(`/rating`, { item: item, level: rate })
+        .then(({ data }) => {
+          this.$swal('評分成功')
+          this.fetchData()
+        })
+    },
+    statusConfirm(item, status) {
+
+      this.axios.put(`/items/${item.id}`, { status: status })
+        .then(({ data }) => {
+          this.fetchData()
+          // this.$router.push({ redirect: { name: 'sellout' } })
+        })
+        .catch((error) => console.log(error.response))
+    },
+    fetchData(method_name) {
+      console.log(method_name)
+      this.axios.get(`invoice?page=${this.page}&method_name=${method_name}`)
+        .then(({ data }) => {
+          console.log(data)
+          this.orders = data.data;
+          this.order_info = data
+          // delete data.data
+        })
+    }
+  }
+}
 
 </script>
+<style>
+.pane-body {
+  border-bottom: solid silver 5px;
+}
+
+</style>

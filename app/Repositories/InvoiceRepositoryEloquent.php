@@ -46,17 +46,17 @@ class InvoiceRepositoryEloquent extends BaseRepository implements InvoiceReposit
         $request=request();
         $user_invoice='';
         switch($request->method_name){
-            case 'fetchAllOrders':
+            case 'buy_list':
              $user_invoice=$this->getInvoiceOfItems();
             break;            
-            case 'buycomplete':
-            $user_invoice=$this->getInvoiceOfStatusItems($userid,[12]);
+            case 'trade_complete':
+            $user_invoice=$this->getInvoiceOfStatusItems([12]);
             break;
             case 'buyrefund':
-            $user_invoice=$this->getInvoiceOfStatusItems($userid,[14,11,10]);
+            $user_invoice=$this->getInvoiceOfStatusItems([14,11,10]);
             break;
                case 'buycancell':
-            $user_invoice=$this->getInvoiceOfStatusItems($userid,[8,9]);
+            $user_invoice=$this->getInvoiceOfStatusItems([8,9]);
             break;
             default:
         }
@@ -68,49 +68,26 @@ class InvoiceRepositoryEloquent extends BaseRepository implements InvoiceReposit
         $user_id=JWTAuth::parseToken()->authenticate()->id;
 
         $user_invoice=InvoiceItem::with([
-        'itemStatus','product','product.user','rating','rating_comment'])
+        'order_status' ,'pay_type', 'product','product.user','rating','rating_comment'])
         ->where('buyer_id',$user_id)
         ->orderBy('created_at','desc')
         // ->get();
         ->paginate(3);
         return $user_invoice;
     }
-    public function getInvoiceOfStatusItems($userid,$statusID){
+    public function getInvoiceOfStatusItems($status_id){
+        $user_id=JWTAuth::parseToken()->authenticate()->id;
 
-        $invoices=$this->model->where('user_id',$userid)->get();
+        $invoices=$this->model->where('user_id', $user_id)->get();
         $invoiceID=[];
         foreach($invoices as $invoice){
             $invoiceID[]=$invoice->id;
         }
-        $invoiceItems=InvoiceItem::whereIn('invoice_id',$invoiceID)
-        ->get();
-        $invoiceItemID=[];
-          foreach($invoiceItems as $invoiceItem){
-            $invoiceItemID[]=$invoiceItem->id;
-        }
-     $CompleteItems= DB::table('item_details')
-        ->whereIn('item_id',$invoiceItemID)
-        ->whereIn('item_statuses_id',$statusID)
-        ->get();
-        $CompleteItemsID=[];
-        foreach($CompleteItems as $CompleteItem){
-            $CompleteItemsID[]=$CompleteItem->item_id;
-        }
-     $Items= InvoiceItem::whereIn('id', $CompleteItemsID)
-        ->get();
-        $CompleteInvoiceId=[];
-         foreach($Items as $Item){
-            $CompleteInvoiceId[]=$Item->invoice_id;
-        }
-        
-     return $this->model
-        ->with([ 'items'=>function($q) use ($CompleteItemsID){
-            $q->whereIn('id',$CompleteItemsID);
-        },
-        'items.itemStatus','items.product','items.product.user','items.rating','items.rating_comment',])
-        ->whereIn('id',$CompleteInvoiceId)
-        ->orderBy('created_at','desc')
+        $items = InvoiceItem::with([
+        'order_status' ,'pay_type', 'product','product.user','rating','rating_comment'])->whereIn('order_status_id', $status_id)
         ->paginate(3);
+        
+        return $items;
     }
     public function getInvoiceOfRefundItems($userid){
         return $user_invoice=$this->model

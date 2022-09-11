@@ -45,7 +45,7 @@ import Product from '@/components/product/product'
  {
      name:'order',
      component:Order,
-     path:'/master/my?type=buy_list',
+     path:'/master/my/order',
      meta:{forAuth:true}
  },
   {

@@ -44,7 +44,7 @@ class ProductRepositoryEloquent extends BaseRepository implements ProductReposit
         $method_name=$request->method_name;
             switch ($method_name){
             case 'fetchMyProducts':
-            $model= Product::with('user','category')->where('user_id',$userID)->where('visible','<>','0')->orderBy('created_at','desc')->paginate($per_page);
+            $model= Product::with('user','category')->where('user_id',$userID)->where('is_visible','<>','0')->orderBy('created_at','desc')->paginate($per_page);
             break;
             case 'sellout':
             $model= Product::with('user','category')->where('user_id',$userID)->where('quantity',0)->orderBy('created_at','desc')->paginate($per_page);
@@ -58,7 +58,7 @@ class ProductRepositoryEloquent extends BaseRepository implements ProductReposit
         $user_id=$user->id;
         $countRateOfUser=$this->countRateOfUser($user_id);
         $countProduct=$this->countProductOfUser($user_id);
-        $model= Product::with('user')->where('user_id',$user_id)->where('quantity','<>',0)->where('visible','<>','0')->orderBy('created_at','desc')->paginate($per_page);
+        $model= Product::with('user')->where('user_id',$user_id)->where('quantity','<>',0)->where('is_visible','<>','0')->orderBy('created_at','desc')->paginate($per_page);
         return ['model'=>$model,'store_info'=> ['countProduct'=>$countProduct,'user'=>$user,'countRateOfUser'=>$countRateOfUser]];
     }
     public function countProductOfUser($user_id){

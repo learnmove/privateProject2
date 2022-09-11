@@ -22,7 +22,7 @@ class CreateProductsTable extends Migration
 			$table->integer('quantity');
 			$table->integer('school_id');
 			$table->integer('category_id');
-			$table->boolean('visible')->default(1);
+			$table->boolean('is_visible')->default(1);
 			$table->string('img')->nullable();
             $table->timestamps();
 		});

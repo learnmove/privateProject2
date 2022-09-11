@@ -76,13 +76,16 @@ class InvoicesController extends Controller
             $product=Product::with('user')->find($item['id']);
             $restQty=$product->qty-$item['quantity'];
             $product->update(['quantity'=>$restQty]);
-            $item['product_id'] = $item['id'];
+            $item['product_id'] = $product->id;
             unset($item['id']);
             $item['seller_id']=$product->user->id;
             $item['buyer_id']=$user->id;
+            $item['order_status_id'] = 1;
+            $item['pay_type_id'] = 3;
+            $item['ship_type_id'] = 4;
             $item = InvoiceItem::create($item);
-            $item->itemStatus()->attach(1);
-            $item->seller->notify(new \App\Notifications\ProductPurchased($item));
+            // $item->itemStatus()->attach(1);
+            // $item->seller->notify(new \App\Notifications\ProductPurchased($item));
         }
              return response()->json(
                    '已下訂單'

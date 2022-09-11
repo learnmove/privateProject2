@@ -24,22 +24,26 @@ class User extends Model implements Transformable
         'email'
         , 'password'
         ,'account',
-        'avatar'
+        'avatar',
+        'wallet',
+        'phone',
+        'is_enable',
+        'shop_name',
+        'shop_description'
     ];
-
     /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
      */
+    protected $hidden = [
+        'password', 'remember_token', 'id', 'is_enable', 'wallet'
+    ];
 
       public function receivesBroadcastNotificationsOn()
     {
         return 'App.User.'.$this->id;
     }
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
     public function products(){
         return $this->hasMany(\App\Entities\Product::class);
     }

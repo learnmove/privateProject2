@@ -55,7 +55,7 @@ class LoginController extends Controller
 
     }
 
-    public function changeSchool(Request $request){
+    public function changeProfile(Request $request){
              try{
       if(JWTAuth::getToken()){
           $user_id=JWTAuth::parseToken()->authenticate()->id;

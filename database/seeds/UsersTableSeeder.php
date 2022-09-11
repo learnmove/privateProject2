@@ -30,6 +30,12 @@ class UsersTableSeeder extends Seeder
         'school_id'=>3,
         'password' => bcrypt('789789'),
         'remember_token' => str_random(10),
+        'wallet' => 100,
+        'is_enable' => 1,
+        'phone' => '0922582625',
+        'shop_name' => '鋪',
+        'shop_description' => '',
+        
     ]);
         User::create([
             'name' => '蔡英文',
@@ -39,6 +45,12 @@ class UsersTableSeeder extends Seeder
             'school_id'=>3,
             'password' => bcrypt('789789'),
             'remember_token' => str_random(10),
+            'wallet' => 100,
+            'is_enable' => 1,
+            'phone' => '0922582625',
+            'shop_name' => '鋪',
+            'shop_description' => '',
+
         ]);
 
     }

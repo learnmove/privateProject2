@@ -19,8 +19,15 @@ class CreateUsersTable extends Migration
             $table->text('avatar');
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('phone', 10)->default('1234567890');
             $table->string('password');
             $table->integer('school_id');
+            $table->integer('wallet')->default(0);
+            $table->tinyInteger('is_enable')->default(1);
+
+            $table->string('shop_name');
+            $table->text('shop_description')->nullable();
+
             $table->rememberToken();
             $table->timestamps();
         });

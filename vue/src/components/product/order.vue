@@ -2,10 +2,10 @@
   <div class="container">
     <pagination :method_name="method_name" @fetchProducts="fetchProducts" :last_page="order_info.last_page"></pagination>
     <ul class="nav nav-pills">
-      <li role="presentation" class="active"><a href="#" @click.prevent="filter_buy('fetchAllOrders')">所有訂單</a></li>
-      <li role="presentation"><a href="#" @click.prevent="filter_buy('buycomplete')">完成清單</a></li>
-      <li role="presentation"><a href="#" @click.prevent="filter_buy('buyrefund')">退貨清單</a></li>
-      <li role="presentation"><a href="#" @click.prevent="filter_buy('buycancell')">取消清單</a></li>
+      <li role="presentation" :class="{active: $route.query.type == 'buy_list'} "><a href="#" @click.prevent="filter_buy('buy_list')">所有訂單</a></li>
+      <li role="presentation" :class="{active: $route.query.type == 'trade_complete'}"><a href="#" @click.prevent="filter_buy('trade_complete')">完成清單</a></li>
+      <li role="presentation" :class="{active: $route.query.type == 'buyrefund'}"><a href="#" @click.prevent="filter_buy('buyrefund')">退貨清單</a></li>
+      <li role="presentation" :class="{active: $route.query.type == 'buycancell'}"><a href="#" @click.prevent="filter_buy('buycancell')">取消清單</a></li>
     </ul>
     <div class="panel panel-default" v-for="order in orders ">
       <div class="panel-heading">
@@ -49,7 +49,7 @@
             </td>
             <td>${{order.amount}} </td>
             <td>
-              <router-link :to="{name:'userstore',params:{'user_account':order.product.user.account}}">{{order.product.user.account}} </router-link>
+              <router-link :to="{name:'userstore',params:{'user_account':order.product.user.account}}">{{order.product.user.account}}</router-link>
               <button class="btn btn-danger" @click="chat_select(order.seller_id)">聊聊</button>
             </td>
           </tr>
@@ -62,30 +62,28 @@
         <table class="table table-striped ">
           <thead>
             <tr>
-              <th>訂單管理</th>
+              <th>付款方式</th>
               <th>訂單狀態</th>
               <th>訂單取消</th>
             </tr>
           </thead>
           <tr>
-            <td v-if="order.item_status[0].id==1"><button class="btn btn-primary btn-xs" @click="statusConfirm(order,2)">付款確認</button> </td>
-            <td v-if="order.item_status[0].id==7"><button class="btn btn-primary btn-xs" @click="statusConfirm(order,15)">收貨確認</button> </td>
-            <td v-if="order.item_status[0].id==8&&order.item_status[0].pivot.requester_id!==$auth.getUserId()"><button class="btn btn-primary btn-xs" @click="statusConfirm(order,9)">同意取消交易</button> </td>
-            <td>{{order.item_status[0].content}} </td>
-            <td v-if="order.item_status[0].id==12"><button class="btn btn-primary btn-xs" @click="statusConfirm(order,10)">要求退貨</button> </td>
-            <td v-if="order.item_status[0].id==1||order.item_status[0].id==2||order.item_status[0].id==2"><button class="btn btn-primary btn-xs" @click="statusConfirm(order,8)">要求取消交易</button> </td>
+            <td><span  @click="statusConfirm(order,8)">{{order.pay_type.cht_name}}</span> </td>
+            <td><button class="btn btn-primary btn-xs" @click="statusConfirm(order,8)">{{order.order_status.cht_name}}</button> </td>
+            <td><button class="btn btn-primary btn-xs" @click="statusConfirm(order,8)">取消</button> </td>
+
           </tr>
         </table>
         <table v-if="!order.rating">
           <tr>
             <td>
-              <Rate v-if="order.item_status[0].id==9||order.item_status[0].id==12||order.item_status[0].id==11" :value="order.rating?order.rating.level:1" @afterRate="onAftereRate" :order="order" :length="5"></Rate>
+              <Rate  :value="order.rating?order.rating.level:1" @afterRate="onAftereRate" :order="order" :length="5"></Rate>
             </td>
           </tr>
         </table>
         <table v-if="!order.rating_comment">
-          <input v-if="order.item_status[0].id==9||order.item_status[0].id==12||order.item_status[0].id==11" class="form-control" type="text" v-model="order.feedback">
-          <td v-if="order.item_status[0].id==9||order.item_status[0].id==12||order.item_status[0].id==11"><button class="btn btn-primary btn-xs" @click="itemfeedback(order)">評價</button> </td>
+          <input  class="form-control" type="text" v-model="order.feedback">
+          <td ><button class="btn btn-primary btn-xs" @click="itemfeedback(order)">評價</button> </td>
           </td>
         </table>
       </div>
@@ -106,7 +104,7 @@ export default {
 
       orders: [],
       order_info: {},
-      method_name: 'fetchAllOrders',
+      method_name: '',
       page: 1
     }
   },
@@ -115,8 +113,8 @@ export default {
     pagination
   },
   beforeMount() {
-    this.fetchData()
-
+    this.$router.push({query: {type: 'buy_list'}})
+    this.fetchData(this.$route.query.type)
   },
   methods: {
     chat_select(seller_id) {
@@ -129,9 +127,9 @@ export default {
       })
     },
     filter_buy(method_name) {
-      console.log(method_name)
       // this.$router.push({name:'order',query: {type: method_name}})
-      this.method_name = method_name;
+      this.$router.push({query: {type: method_name}})
+      this.fetchData(method_name)
     },
     fetchProducts({ page }) {
       this.page = page
@@ -156,16 +154,18 @@ export default {
       this.axios.put(`/items/${item.id}`, { status: status })
         .then(({ data }) => {
           this.fetchData()
-          this.$router.push({ redirect: { name: 'sellout' } })
+          // this.$router.push({ redirect: { name: 'sellout' } })
         })
         .catch((error) => console.log(error.response))
     },
-    fetchData() {
-      this.axios.get(`invoice?page=${this.page}&method_name=${this.method_name}`)
+    fetchData(method_name) {
+      console.log(method_name)
+      this.axios.get(`invoice?page=${this.page}&method_name=${method_name}`)
         .then(({ data }) => {
+          console.log(data)
           this.orders = data.data;
-          delete data.data
           this.order_info = data
+          // delete data.data
         })
     }
   }

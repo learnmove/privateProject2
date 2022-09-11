@@ -9,7 +9,7 @@ class Product extends Model
 {
     protected $table="products";
     public $timestamps=true;
-    protected $fillable = ['category_id','school_id','visible','quantity','name','price','description','user_id','img'];
+    protected $fillable = ['category_id','school_id','is_visible','quantity','name','price','description','user_id','img'];
     //   protected static function boot()
     // {
     //     parent::boot();

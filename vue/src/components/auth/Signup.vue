@@ -30,7 +30,7 @@
     </div>
   </div>
   <div class="form-group">
-      <label for="" class="col-sm-2 control-label">姓名</label>
+      <label for="" class="col-sm-2 control-label">名稱</label>
       <div class="col-sm-10">
           <input v-model="form.name" type="text" name="" id="" class="form-control">
       </div>
@@ -39,15 +39,16 @@
 
          <label for="" class="col-sm-2 control-label">學校</label>
       <div class="col-sm-10">
+               <select data-live-search="true"  class="selectpicker" v-model="form.school_id" >
+            <option v-for="school in schools" :value="school.id">{{school.name}} </option>
+        </select> 
+
       </div>
       
   </div>
   <button type="submit" class="btn btn-primary pull-right">註冊</button>
       </form>
-         <select data-live-search="true"  class="selectpicker" v-model="form.school_id" >
-      <option v-for="school in schools" :value="school.id">{{school.name}} </option>
-  </select> 
-          </div>
+                  </div>
       </div>
      
   </div>

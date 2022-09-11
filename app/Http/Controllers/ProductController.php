@@ -47,7 +47,7 @@ class ProductController extends Controller
         $p = Product::with('user','category','school')
         ->withCount('questions')
                  ->where('quantity','>','0')
-                 ->where('visible','<>','0');
+                 ->where('is_visible','<>','0');
         if($request->selectSchoolID){
             $p =$p->where('school_id', $request->selectSchoolID);
         }
@@ -175,10 +175,10 @@ class ProductController extends Controller
         // $deleteStatus=$this->productRepository->destroypProduct($id);
         // 改成有visible欄位 軟刪
         $product= Product::find($id);
-        $product->visible=0;
+        $product->is_visible=0;
         $product->save();
-        $softDeleteStatus = '刪除成功';
-        return response()->json([$softDeleteStatus]);
+        $messages = '刪除成功';
+        return response()->json([$messages]);
     }
     public function getMyStore(){
         return response()->json($this->productRepository->withMeAndPage(10,$this->userID));

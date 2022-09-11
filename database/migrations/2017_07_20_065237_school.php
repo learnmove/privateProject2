@@ -16,6 +16,7 @@ class School extends Migration
         Schema::create('school',function(Blueprint $table){
             $table->increments('id');
             $table->string('name');
+            $table->tinyInteger('is_visible')->default(1);
         });
          DB::table('school')->insert([
 ['name'=>'_____大學______'],
@@ -555,7 +556,7 @@ class School extends Migration
      */
     public function down()
     {
-        		Schema::drop('school');
+        		Schema::dropIfExists('school');
 
     }
 }

@@ -15,7 +15,7 @@ class CreateCategoriesTable extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->smallInteger('parent_id')->nullable();
+            $table->integer('parent_id')->nullable();
             $table->timestamps();
         });
         DB::table('categories')
@@ -48,7 +48,7 @@ class CreateCategoriesTable extends Migration
             ['id' => '26', 'name'=>'家教', 'parent_id' => '0'],
             ['id' => '27', 'name'=>'揪團/聯誼', 'parent_id' => '0'],
             ['id' => '28', 'name'=>'校內活動', 'parent_id' => '0'],
-            ['id' => '29', 'name'=>'搬家', 'parent_id' => '0'],
+            ['id' => '29', 'name'=>'搬家公司', 'parent_id' => '0'],
 
 
 
@@ -77,16 +77,18 @@ class CreateCategoriesTable extends Migration
             ['id' => '403' , 'name'=>'鼓', 'parent_id' => '15'],
             ['id' => '404' , 'name'=>'其他', 'parent_id' => '15'],
 
-            ['id' => '500' , 'name'=>'數學作業', 'parent_id' => '18'],
-            ['id' => '501' , 'name'=>'英文作業', 'parent_id' => '18'],
-            ['id' => '502' , 'name'=>'程式作業', 'parent_id' => '18'],
-            ['id' => '503' , 'name'=>'國文作業', 'parent_id' => '18'],
-            ['id' => '504' , 'name'=>'商管作業', 'parent_id' => '18'],
-            ['id' => '505' , 'name'=>'國考作業', 'parent_id' => '18'],
-            ['id' => '506' , 'name'=>'理工作業', 'parent_id' => '18'],
-            ['id' => '507' , 'name'=>'高中作業', 'parent_id' => '18'],
-            ['id' => '508' , 'name'=>'高職作業', 'parent_id' => '18'],
-            ['id' => '509' , 'name'=>'國中作業', 'parent_id' => '18'],
+            ['id' => '500' , 'name'=>'數學疑問/作業', 'parent_id' => '18'],
+            ['id' => '501' , 'name'=>'英文疑問/作業', 'parent_id' => '18'],
+            ['id' => '502' , 'name'=>'程式疑問/作業', 'parent_id' => '18'],
+            ['id' => '503' , 'name'=>'國文疑問/作業', 'parent_id' => '18'],
+            ['id' => '504' , 'name'=>'商管疑問/作業', 'parent_id' => '18'],
+            ['id' => '505' , 'name'=>'國考疑問/作業', 'parent_id' => '18'],
+            ['id' => '506' , 'name'=>'專科疑問/作業', 'parent_id' => '18'],
+            ['id' => '507' , 'name'=>'理工疑問/作業', 'parent_id' => '18'],
+            ['id' => '508' , 'name'=>'高中疑問/作業', 'parent_id' => '18'],
+            ['id' => '509' , 'name'=>'高職疑問/作業', 'parent_id' => '18'],
+            ['id' => '510' , 'name'=>'國中疑問/作業', 'parent_id' => '18'],
+            ['id' => '511' , 'name'=>'法律疑問/作業', 'parent_id' => '18'],
 
 
             ['id' => '600' , 'name'=>'程式外包', 'parent_id' => '21'],

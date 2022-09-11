@@ -23,6 +23,10 @@ $factory->define(App\Entities\User::class, function (Faker\Generator $faker) {
         'school_id'=> mt_rand(1,370),
         'password' => $password ?: $password = bcrypt('secret'),
         'remember_token' => str_random(10),
+        'wallet' => '0',
+        'phone' => '1234567890',
+        'shop_name' => $faker->name . '鋪',
+        'shop_description' => $faker->paragraph,
     ];
 });
 
