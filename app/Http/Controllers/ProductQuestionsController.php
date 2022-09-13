@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Entities\ProductQuestion;
 use App\Http\Requests;
 use Prettus\Validator\Contracts\ValidatorInterface;
 use Prettus\Validator\Exceptions\ValidatorException;
@@ -52,12 +52,15 @@ class ProductQuestionsController extends Controller
      */
     public function store(Request $request)
     {
-        $this->repository->create($request->except('seller_id'));
+        ProductQuestion::create($request->except('seller_id'));
         $seller=User::find($request->seller_id);
+
+
+
         if($this->user->id!=$request->seller_id){
        $seller->notify(new \App\Notifications\ProductQuestion($request->product_id,$request->account,$request->content));
-            
         }
+        
         return response()->json('留言成功');
     }
 

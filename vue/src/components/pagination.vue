@@ -27,28 +27,27 @@
     },
     computed:{
         pages(){
-           let  arrayp=new Array()
-
-
+           let  arr=new Array()
            this.page_start = this.page -4;
            if(this.page_start <= 0){
              this.page_start = 1;
            }
 
-
-           this.page_end = this.page  +4
-           if((this.page + 4 ) < this.last_page && this.last_page < 10){this.page_end = this.last_page;}
+           this.page_end = parseInt(this.page)  +4
+           if((parseInt(this.page) + 4 ) < this.last_page && this.last_page < 10){this.page_end = this.last_page;}
 
            if(this.page_end < 10 && this.last_page > 10){
              this.page_end = 10
            }
-           if(this.page_end > this.last_page){this.page_end = this.last_page}
+           if(this.page_end > this.last_page){
+            this.page_end = this.last_page
+          }
           
 
            for(let i=this.page_start;i<=this.page_end;i++){
-               arrayp.push(i)
+               arr.push(i)
            }
-           return arrayp
+           return arr
         }
     }
     }

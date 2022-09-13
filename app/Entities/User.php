@@ -38,6 +38,7 @@ class User extends Model implements Transformable
      */
     protected $hidden = [
         'password', 'remember_token', 'id', 'is_enable', 'wallet'
+
     ];
 
       public function receivesBroadcastNotificationsOn()

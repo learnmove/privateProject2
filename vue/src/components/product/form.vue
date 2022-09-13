@@ -59,6 +59,14 @@
                         <div class="col-sm-10">
                             <input type="file" @change="imgChg" name="" id="" class="form-control">
                         </div>
+                        <div class="col-sm-12">
+                          <img id="avatar" v-if="this.form.img!=''" :src="this.form.img" class="img-responsive" style="
+                          width:150px;
+                          display: block;
+                          margin-left: auto;
+                          margin-right: auto;
+                          " alt="">
+                        </div>
                     </div>
                       <div class="form-group" >
                         <div class="col-sm-2">

@@ -8,7 +8,7 @@
       </div>
     </div>
     <div class="row">
-      <pagination :method_name="method_name" @changePage="changePage" :last_page="products.last_page" :page="this.fetchProducts_params.page" :page_length="'10'"></pagination>
+      <pagination :method_name="method_name" @changePage="changePage" :last_page="products.last_page" :page="$route.query.page" :page_length="'10'"></pagination>
     </div>
     <button class="btn btn-info" v-if="$auth.isAuthenticate()" @click.prevent="selectSchool($auth.getUserSchoolId())">我的學校</button>
     <div class="dropdown">
@@ -101,7 +101,7 @@
             </div>
           </div>
         </div>
-        <pagination @fetchProducts="questionPage" :passpage="question_page" :last_page="question_info.last_page"></pagination>
+        <!-- <pagination @fetchProducts="questionPage" :passpage="question_page" :last_page="question_info.last_page"></pagination> -->
       </modal>
     </div>
     <pagination :method_name="method_name" @changePage="changePage" :last_page="products.last_page" :page="this.fetchProducts_params.page" :page_length="'10'"></pagination>

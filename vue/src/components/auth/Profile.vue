@@ -6,14 +6,18 @@
 </h4>
       </div>
       <div class="panel-body">
-        <form @submit.prevent="" class="form-horizontal">
+        <form @submit.prevent="upload()" class="form-horizontal">
           <div class="form-group">
             <div class="col-sm-2">
               <label for="">使用者名稱</label>
             </div>
-            <div class="col-sm-10">
+            <div class="col-sm-8">
               <span>{{form.account}} </span>
             </div>
+            <div class="col-sm-2">
+              <img id="avatar" :src="this.form.avatar" class="img-responsive img-circle" style="height: 50px;width:50px" alt="">
+            </div>  
+
           </div>
           <div class="form-group">
             <div class="col-sm-2">
@@ -28,8 +32,9 @@
           </div>
           <div class="form-group">
             <div class="col-sm-2">
-              <label for="">圖片</label>
+              <label for="">大頭貼</label>
             </div>
+
             <div class="col-sm-10">
               <input type="file" @change="imgChg" name="" id="" class="form-control">
             </div>
@@ -80,7 +85,7 @@ export default {
     return {
       schools: [],
       school_id: '',
-      form: { shop_description: '' }
+      form: {}
     }
   },
   beforeMount() {
@@ -98,6 +103,26 @@ export default {
   // },
 
   methods: {
+    upload(){
+      this.axios.post(`/updateProfile`,this.form)
+      .then(({data})=>{
+        // this.$swal(data[0]);this.$router.push({name:'mysell'});
+        console.log(data)
+      })
+      .catch((error)=>console.log(this.errors=error.response.data))
+    },
+    imgChg(e){
+        var avatar = document.getElementById('avatar');
+        avatar.src = URL.createObjectURL(e.target.files[0]);
+      avatar.onload = function() {
+      URL.revokeObjectURL(avatar.src) // free memory
+    }
+        var fr=new FileReader()
+        fr.readAsDataURL(e.target.files[0])
+        fr.onload=(e)=>{
+            this.form.avatar=e.target.result
+        }
+    },
     fetchProfile() {
       this.axios.get('/getProfile')
         .then(({ data }) => {
